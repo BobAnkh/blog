@@ -1,2 +1,3 @@
-# BobAnkh.github.io
-Visit at blog.bobankh.com
+# My blog
+
+Please visit [blog.bobankh.com](https://blog.bobankh.com)
