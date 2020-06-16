@@ -1,10 +1,11 @@
 Title: Install Transmission under Ubuntu
 Date: 2020-6-16 23:40
-Category: Linux, Server
+Category: Linux
 Tags: Linux, Ubuntu, Transmission, Server, Download
 Slug: blog/transmission
 Author: BobAnkh
 Summary: 在Linux下安装一个快速免费且简单的BitTorrent客户端Transmission，并启用WebUI
+Illustration: background.jpg
 
 [TOC]
 
