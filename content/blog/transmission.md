@@ -1,14 +1,15 @@
 Title: Install Transmission under Ubuntu
 Date: 2020-6-16 23:40
-Category: Linux, Server
+Category: Linux
 Tags: Linux, Ubuntu, Transmission, Server, Download
 Slug: blog/transmission
 Author: BobAnkh
-Summary: 在Linux下安装一个快速免费且简单的BitTorrent客户端Transmission，并启用WebUI
+Summary: 在Linux下（本文以Ubuntu 18.04 LTS为例）安装一个快速简单且免费的BitTorrent客户端Transmission，并启用WebUI
+Illustration: background.jpg
 
 [TOC]
 
-> 注意：作为root进行工作
+> 注意：作为root用户进行工作或在对应命令前加上sudo
 
 ## 1. 安装 transmission-daemon
 
@@ -20,7 +21,8 @@ apt install transmission-daemon -y
 
 ## 2. 修改 `settings.json`
 
-> 首先你需要先停止 `transmission-daemon` 然后在修改配置文件
+> 首先你需要先停止 `transmission-daemon` 然后再修改配置文件
+>
 > 配置文件 `settings.json` 通常会在目录 `/etc/transmission/`之下
 
 在你的终端中输入以下两行命令来停止`transmission-daemon`并打开配置文件 `settings.json`
@@ -78,7 +80,7 @@ vim /etc/transmission-daemon/settings.json
     "ratio-limit-enabled": false,
     "rename-partial-files": true,
     "rpc-authentication-required": true,//check
-"rpc-bind-address": "0.0.0.0", //check
+    "rpc-bind-address": "0.0.0.0", //check
     "rpc-enabled": true, //check
     "rpc-host-whitelist": "",//check
     "rpc-host-whitelist-enabled": true,//check
@@ -112,15 +114,15 @@ service transmission-daemon start
 service transmission-daemon status
 ```
 
-> 如果此时没有输出任何warning或者failure，那么说明配置完成并且可以正常工作了
+> 如果此时没有输出任何warning或者failure，那么说明配置已完成并且可以正常工作了
 
 然后你就可以访问以下地址`http://<your ip address>:9091`进入到`transmission-daemon`的WebUI界面进行管理
 
-## 3. 在配置并启动后你可能会遇到的问题
+## 3. 在配置并启动后你可能会遇到的报错
 
 ### “UDP Failed to set receive buffer ... ”error
 
-只需要输入以下两个命令即可解决:
+解决该错误，只需要输入以下两行命令即可解决:
 
 ```shell
 sysctl -w net.core.rmem_max=8388608
