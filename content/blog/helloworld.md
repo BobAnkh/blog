@@ -16,10 +16,12 @@ Welcome to my blog!
 
 ## About
 
-1. support math formulas
-2. support auto-generated contents
-3. support images
-4. support comments by DISQUS
+1. Use [nest](https://github.com/molivier/nest/tree/master) as the theme
+2. support math formulas with extension [render_math](https://github.com/getpelican/pelican-plugins/tree/master/render_math)
+3. support auto-generated contents with extension [extract_toc](https://github.com/getpelican/pelican-plugins/tree/master/extract_toc)
+4. support images
+5. support comments by [DISQUS](https://disqus.com/)
+6. support auto-generation by [GITHUB ACTIONS](https://github.com/features/actions)
 
 ### Math formulas
 
@@ -29,6 +31,6 @@ $$e^{\pi i}+1=0$$
 
 ### Images
 
-image from self-hosted image hosting powered by Lsky Pro:
+Image from self-hosted image hosting powered by [Lsky Pro](https://github.com/wisp-x/lsky-pro):
 
 ![images](https://image.bobankh.com/2020/05/21/3d4cb9f4e88aa.jpg)
