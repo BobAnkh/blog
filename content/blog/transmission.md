@@ -1,5 +1,6 @@
 Title: Install Transmission under Ubuntu
 Date: 2020-6-16 23:40
+Modified: 2020-6-19 11:43
 Category: Linux
 Tags: Linux, Ubuntu, Transmission, Server, Download
 Slug: blog/transmission
