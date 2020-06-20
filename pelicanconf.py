@@ -40,7 +40,8 @@ EXTRA_PATH_METADATA = {
     'extra/CNAME': {'path': 'CNAME'},
     'extra/robots.txt': {'path': 'robots.txt'},
     'extra/favicon.ico': {'path': 'favicon.ico'},
-    'extra/README.md': {'path': 'README.md' ,}
+    'extra/README.md': {'path': 'README.md'},
+    'extra/LICENSE': {'path': 'LICENSE'}
     #'extra/logo.svg': {'path': 'logo.svg'}
     }
 DELETE_OUTPUT_DIRECTORY = True
