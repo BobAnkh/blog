@@ -47,18 +47,20 @@
             </nav>
         {% endif %}
         {{ article.content }}
-        
+        <h2>Other Articles</h2>
         {% if article.prev_article %}
-                <h3>Previous Article</h3>
+            <h3>Previous Article: 
                 <a href="{{ SITEURL }}/{{ article.prev_article.url}}">
                     {{ article.prev_article.title }}
                 </a>
+            </h3>
         {% endif %}
         {% if article.next_article %}
-                <h3>Next Article</h3>
+            <h3>Next Article: 
                 <a href="{{ SITEURL }}/{{ article.next_article.url}}">
                     {{ article.next_article.title }}
                 </a>
+            </h3>
         {% endif %}
 
         {% if article.related_posts %}
