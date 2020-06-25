@@ -217,7 +217,7 @@ plugins/more_categories
 plugins/multimarkdown_reader
 plugins/multi_neighbors
 plugins/multi_part
-plugins/neighbors
+#plugins/neighbors
 plugins/optimize_images
 plugins/org_pandoc_reader
 plugins/org_python_reader

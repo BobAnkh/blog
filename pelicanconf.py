@@ -52,7 +52,7 @@ DEFAULT_DATE_FORMAT = u'%Y-%m-%d(%a)'
 GITHUB_URL = u'https://github.com/BobAnkh'
 
 PLUGIN_PATHS = ['plugins']
-PLUGINS = ['sitemap', 'render_math', 'extract_toc']
+PLUGINS = ['sitemap', 'render_math', 'extract_toc', 'neighbors']
 SITEMAP = {
     'format': 'xml',
     'priorities': {

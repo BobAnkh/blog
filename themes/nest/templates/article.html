@@ -47,8 +47,22 @@
             </nav>
         {% endif %}
         {{ article.content }}
+        
+        {% if article.prev_article %}
+                <h3>Previous Article</h3>
+                <a href="{{ SITEURL }}/{{ article.prev_article.url}}">
+                    {{ article.prev_article.title }}
+                </a>
+        {% endif %}
+        {% if article.next_article %}
+                <h3>Next Article</h3>
+                <a href="{{ SITEURL }}/{{ article.next_article.url}}">
+                    {{ article.next_article.title }}
+                </a>
+        {% endif %}
+
         {% if article.related_posts %}
-            <h4>Articles connexes</h4>
+            <h4>Articles Related</h4>
             <dl class="dl-horizontal">
             {% for related_post in article.related_posts %}
                 <dt>{{ related_post.locale_date}}</dt>
