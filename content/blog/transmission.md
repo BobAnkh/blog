@@ -1,4 +1,4 @@
-Title: Install Transmission under Ubuntu
+Title: 在Ubuntu下安装Transmission
 Date: 2020-6-16 23:40
 Modified: 2020-6-19 11:43
 Category: Linux
