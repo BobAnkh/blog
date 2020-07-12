@@ -29,9 +29,9 @@ Illustration: background.jpg
 
 ![netstat](https://image.bobankh.com/2020/07/10/d07094470a348.png)
 
-发现存在两个连接是通向2个奇怪的ip地址的，其中之一就是kswapd0，还有一个是rsync（用于远程数据同步）：
+发现存在两个连接是通向2个奇怪的ip地址的，其中之一就是kswapd0，还有一个是rsync（是病毒缓存文件）：
 
-检查这两个ip地址发现都是荷兰的ip，而且是同一个段的：
+检查这两个ip地址发现都是荷兰的ip，而且是同一个段的，查询发现也是知名的挖矿ip：
 
 ![45.9.148.125](https://image.bobankh.com/2020/07/10/7b54ce07f625f.png) ![45.9.148.99](https://image.bobankh.com/2020/07/10/b69342dde711a.png)
 
@@ -45,14 +45,30 @@ Illustration: background.jpg
 
 ![crontab](https://image.bobankh.com/2020/07/10/41d832cfb6a41.png)
 
+另外，对于该用户，还需要检查其`.ssh`目录下`authorized_keys`是否被配置了后门的ssh的key，本次发现该公钥如下，也是一个知名公钥了：
+
+```txt
+AAAAB3NzaC1yc2EAAAABJQAAAQEArDp4cun2lhr4KUhBGE7VvAcwdli2a8dbnrTOrbMz1+5O73fcBOx8NVbUT0bUanUV9tJ2/9p7+vD0EpZ3Tz/+0kX34uAx1RV/75GVOmNx+9EuWOnvNoaJe0QXxziIg9eLBHpgLMuakb5+BgTFB+rKJAw9u9FSTDengvS8hX1kNFS4Mjux0hJOK8rvcEmPecjdySYMb66nylAKGwCEE6WEQHmd1mUPgHwGQ0hWCwsQk13yCGPK5w6hYp5zYkFnvlC8hGmd4Ww+u97k6pfTGTUbJk14ujvcD9iUKQTTWYYjIIu5PmUux5bsZ0R4WFwdIe6+i6rBLAsPKgAySVKPRK+oRw==
+```
+
 ## 病毒清除
 
 首先，先清理出现问题用户的crontab，使用命令`crontab -e -u vagrant`后，将内容全部清除
 
-接着，用`kill -9 2971`命令将病毒进程杀掉
+接着，用`kill -9 2971`命令将**kswapd0**进程杀掉，同时，用命令`kill -9 2339`将**rsync**进程也杀掉
 
-随后删除`/home/vagrant/`目录下和`/tmp/`目录下存在问题的文件与文件夹
+随后删除`/home/vagrant/`目录下`.configrc/`和`/tmp/`目录下`.X25-unix/dota3.tar.gz`和`.X25-unix/.rsync/*`
 
 至此，清除工作就完成了，后续可以观察病毒是否会再生
 
 另外，建议除特殊要求外，时刻将防火墙开启，并且，如有需要，可以自己编写脚本检查各用户是否存在奇怪的crontab定时计划
+
+这里给出一个可行脚本：
+
+```bash
+cat /etc/passwd | awk -F":" '{print $1}' | while read -r line
+do
+        echo $line
+        crontab -l -u $line
+done
+```
