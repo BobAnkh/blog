@@ -7,6 +7,8 @@ Author: BobAnkh
 Summary: nsdi18的论文Salsify的中文翻译，以谷歌翻译为主体，并进行了一定的修正
 Illustration: background.jpg
 
+[TOC]
+
 > 原论文：Salsify: Low-Latency Network Video Through Tighter Integration Between a Video Codec and a Transport Protocol
 >
 > website: [https://snr.stanford.edu/salsify/](https://snr.stanford.edu/salsify/)
