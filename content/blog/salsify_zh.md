@@ -39,7 +39,7 @@ Salsify的各个组件都不是全新的，也不是明确设计为大型系统�
 
 尽管如此，作为一个具体的系统，Salsify以一种对网络变化做出快速响应而又不会引起数据包丢失或队列延迟的方式集成了这些组件，其性能超过了Skype，FaceTime，Hangouts和部署在Google Chrome浏览器中的WebRTC等最先进的商业水平，无论是否具有可扩展的视频编码-就端到端视频质量和延迟而言（图1给出了结果预览）。
 
-<img src="https://image.bobankh.com/2020/07/04/6eb9f78ff1d62.png" alt="image-20200704234212886" style="zoom:50%;" />
+<img src="https://cdn.jsdelivr.net/gh/BobAnkh/blog/figures/salsify/6eb9f78ff1d62.png" alt="image-20200704234212886" style="zoom:50%;" />
 
 这些结果表明，在这种情况下，对视频编解码器的改进可能已经达到收益递减的地步，但是对视频系统体系结构的更改仍然可以带来显着的收益。如今，是将编解码器和传输协议分开来，它们都有自己独立工作的速率控制算法——当今的应用程序反映了当前的工程实践，其中编解码器在很大程度上被视为黑匣子，但这是以大大降低性能为代价的。 Salsify演示了一种更紧密地集成这些组件的方法，同时保留了它们之间的抽象边界。
 
@@ -123,11 +123,11 @@ $$\tau_i\leftarrow\alpha(T_i-T_{i-1}-\{grace-period\})+(1-\alpha)\tau_{i-1}$$
 
 在发送方，Salsify的传输协议根据接收方报告的最新平均到达间隔时间，估算出所需的帧大小。为了在时间步$i$计算目标大小，发送方首先通过上次发送的数据包的索引和最后确认的数据包的索引相减，估算在传递过程中的数据包数量的上限$N_i$。令$τ_i$为接收机在$i$处报告的最新平均到达间隔时间。如果发送方旨在保持端到端延迟小于$d$（在我们的实现中设置为100 ms）以保持交互性，则在传输中的数据包不得超过$d /τ_i$个数据包。因此，目标大小是$（d /τ_i-N_i）MTU$大小的片段（算法1.6）。发送时，发送方将选择不超过此长度的最大帧。如果两个编码版本都超过此大小，则发送方将丢弃该帧，然后继续发送下一个帧。为了能够接收来自接收者的新反馈，如果连续跳过四个以上的帧，则发送者发送低质量版本（算法2）。
 
-<img src="https://image.bobankh.com/2020/07/04/0724df40499b8.png" alt="image-20200704234335609" style="zoom:50%;" />
+<img src="https://cdn.jsdelivr.net/gh/BobAnkh/blog/figures/salsify/0724df40499b8.png" alt="image-20200704234335609" style="zoom:50%;" />
 
-<img src="https://image.bobankh.com/2020/07/04/8065393acb858.png" alt="image-20200704234354195" style="zoom:50%;" />
+<img src="https://cdn.jsdelivr.net/gh/BobAnkh/blog/figures/salsify/8065393acb858.png" alt="image-20200704234354195" style="zoom:50%;" />
 
-![image-20200704234414498](https://image.bobankh.com/2020/07/04/4ca512bd063c3.png)
+![image-20200704234414498](https://cdn.jsdelivr.net/gh/BobAnkh/blog/figures/salsify/4ca512bd063c3.png)
 
 ## 4 Measurement testbed
 
@@ -147,7 +147,7 @@ $$\tau_i\leftarrow\alpha(T_i-T_{i-1}-\{grace-period\})+(1-\alpha)\tau_{i-1}$$
 
 图3概述了测试平台的硬件布置。在较高的层次上，测试平台的工作原理是将视频注入到发送客户端中，模拟发送方和接收方之间的网络状况，并在接收客户端捕获显示的视频。然后，它将注入到发送方的帧与从接收方捕获的帧进行匹配，并计算延迟和质量。
 
-![image-20200704234501633](https://image.bobankh.com/2020/07/04/9322f32f3ce7f.png)
+![image-20200704234501633](https://cdn.jsdelivr.net/gh/BobAnkh/blog/figures/salsify/9322f32f3ce7f.png)
 
 **硬件**。发送器和接收器是两个计算机，它们运行测试中的实时视频应用程序的未更改版本。每个端点到测试床的视频接口是一个标准接口：对于发送方，测试床模拟UVC网络摄像头设备。对于接收器，测试台捕获HDMI视频输出。
 
@@ -157,7 +157,7 @@ $$\tau_i\leftarrow\alpha(T_i-T_{i-1}-\{grace-period\})+(1-\alpha)\tau_{i-1}$$
 
 测试平台将从接收器捕获的每个帧与在发送者处注入的帧进行匹配。为此，测试台会对视频进行预处理，以在每个帧的左上角和右下角添加两个小的条形码。1这些条形码一起占用了帧面积的3.6％。每个条形码编码一个在视频过程中唯一的64位随机数。图3和4中显示了一个示例帧。在后处理中，通过匹配已发送和已接收帧上的条形码，然后比较相应的帧，可以计算质量和延迟指标。
 
-<img src="https://image.bobankh.com/2020/07/04/423895e022bb9.png" alt="image-20200704235622654" style="zoom:50%;" />
+<img src="https://cdn.jsdelivr.net/gh/BobAnkh/blog/figures/salsify/423895e022bb9.png" alt="image-20200704235622654" style="zoom:50%;" />
 
 ### 4.3 Implementation
 
@@ -173,7 +173,7 @@ $$\tau_i\leftarrow\alpha(T_i-T_{i-1}-\{grace-period\})+(1-\alpha)\tau_{i-1}$$
 
 **建立**。我们使用第4节中描述的测量测试平台进行了所有实验。图5列出了应用程序和版本。在macOS上进行的测试使用了运行macOS Sierra的较新型号MacBook Pro笔记本电脑。 WebRTC（VP9-SVC）在Chrome上使用命令行参数运行，以启用VP9可伸缩视频编码；这些命令行参数是由Google Chrome小组的视频压缩工程师提出的[2](The arguments were: out/Release/chrome --enable-webrtc-vp9-svc-2sl-3tl --fake-variations-channel=canary --variations-server-url=https://clients4.google.com/chrome-variations/seed)。Linux上的测试在装有最新Intel Xeon E3-1240v5处理器和32 GiB RAM的台式计算机上使用Ubuntu 16.10。我们使用同一台Linux计算机测试了Salsify。
 
-![image-20200705101335114](https://image.bobankh.com/2020/07/04/5ccb615dd964c.png)
+![image-20200705101335114](https://cdn.jsdelivr.net/gh/BobAnkh/blog/figures/salsify/5ccb615dd964c.png)
 
 在实验过程中，所有机器都物理上位于同一房间内，并通过千兆以太网连接相互连接并与公共Internet连接。在进行实验时，确保在任何客户端计算机上都没有其他计算或网络密集型进程在运行。
 
@@ -185,7 +185,7 @@ $$\tau_i\leftarrow\alpha(T_i-T_{i-1}-\{grace-period\})+(1-\alpha)\tau_{i-1}$$
 
 ### 5.2 Results
 
-![image-20200705103433234](https://image.bobankh.com/2020/07/04/a5662fb81117e.png)
+![image-20200705103433234](https://cdn.jsdelivr.net/gh/BobAnkh/blog/figures/salsify/a5662fb81117e.png)
 
 **实验1：可变的蜂窝路径**。在本实验中，我们使用Mahimahi网络仿真工具[27]来测量Salsify和其他系统，它们使用AT＆T LTE，T-Mobile UMTS（“ 3G”）和Ver-izon LTE蜂窝网络轨迹。实验时间为10分钟。蜂窝轨迹在整个网络容量范围内随时间变化：从大于20 Mbps到小于100 kbps。尽管在开发当前的1核和2核版本之前，先前在这些迹线上评估了较早的（8核）Sal-sify版本，但目前移除了AT＆T LTE和T-Mobile的轨迹，并未在Salsify的开发中使用。 。
 
@@ -219,11 +219,11 @@ Salsify的丢失恢复策略要求发送者和接收者在内存中保留一组�
 
 **实验6：一秒钟的丢包实验**。在本实验中，我们通过引入单个丢包1 s来比较数据包丢失对Salsify-2c和WebRTC的影响，同时在仿真链路上以500 kbps的恒定数据速率运行每个应用程序。计划在中断期间交付的所有数据包均被丢弃。图8显示了结果。网络恢复后，WebRTC的传输协议会重新传输中断期间丢失的数据包，从而在其视频编解码器开始编码新的视频帧之前引起延迟峰值（WebRTC的基准延迟也大得多）。 Salsify的视频编解码器和传输协议之间没有独立性；网络恢复后，Salsify的功能视频编解码器可以立即根据接收器上已经存在的参考图像对新帧进行编码。这样可以更快地从中断中恢复。
 
-![image-20200705234434664](https://image.bobankh.com/2020/07/05/01cd504e6f54d.png)
+![image-20200705234434664](https://cdn.jsdelivr.net/gh/BobAnkh/blog/figures/salsify/01cd504e6f54d.png)
 
 **实验7：对队列策略的敏感性**。在此实验中，我们量化了网络缓冲区大小对Verizon-LTE网络轨迹下的Salsify，Hangouts，WebRTC和Web-RTC（VP9-SVC）的性能影响。图9中的图显示了在各种DropTail阈值（64、256和1024 MTU大小的数据包）上，每个系统在迹线上的性能。缓冲区大小的选择对受测系统的性能没有显着影响，这可能是因为所有方案都在努力降低延迟，因此不太可能建立足够大的站立队列来查看DropTail导致的数据包丢弃。我们使用中间设置（256个数据包）运行其余测试。
 
-<img src="https://image.bobankh.com/2020/07/05/86753e3d7251d.png" alt="image-20200705234939752" style="zoom: 80%;" />
+<img src="https://cdn.jsdelivr.net/gh/BobAnkh/blog/figures/salsify/86753e3d7251d.png" alt="image-20200705234939752" style="zoom: 80%;" />
 
 ### 5.3 Modifications to systems under test
 

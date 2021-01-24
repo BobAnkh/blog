@@ -113,7 +113,10 @@ mysql> CREATE DATABASE nextcloud;
 mysql> USE nextcloud;
 
 #创建名为nextcloud的用户，密码为password，并赋予相关权限
-mysql> GRANT All  ON nextcloud.* TO nextcloud@localhost IDENTIFIED BY 'password';
+#mysql8.0之前也可使用下述语句，而8.0之后使用次语句会出现授权问题
+#mysql> GRANT All  ON nextcloud.* TO nextcloud@localhost IDENTIFIED BY 'password';
+mysql> CREATE USER nextcloud@localhost IDENTIFIED WITH mysql_native_password BY 'password';
+mysql> GRANT All  ON nextcloud.* TO nextcloud@localhost;
 
 #登出mysql
 mysql> exit

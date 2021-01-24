@@ -21,19 +21,19 @@ Illustration: background.jpg
 
 该进程可以直接kill掉，但是reboot之后又会重新出现，状况如下：
 
-![htop](https://image.bobankh.com/2020/07/10/a1181b1edc2ab.png)
+![htop](https://cdn.jsdelivr.net/gh/BobAnkh/blog/figures/kswapd0/a1181b1edc2ab.png)
 
 ## 探查根源
 
 根据上面的进程信息，可以看到该进程执行的用户是vagrant，这就让人感到奇怪了，于是用命令`netstat -antlp`查看了应用连接：
 
-![netstat](https://image.bobankh.com/2020/07/10/d07094470a348.png)
+![netstat](https://cdn.jsdelivr.net/gh/BobAnkh/blog/figures/kswapd0/d07094470a348.png)
 
 发现存在两个连接是通向2个奇怪的ip地址的，其中之一就是kswapd0，还有一个是rsync（是病毒缓存文件）：
 
 检查这两个ip地址发现都是荷兰的ip，而且是同一个段的，查询发现也是知名的挖矿ip：
 
-![45.9.148.125](https://image.bobankh.com/2020/07/10/7b54ce07f625f.png) ![45.9.148.99](https://image.bobankh.com/2020/07/10/b69342dde711a.png)
+![45.9.148.125](https://cdn.jsdelivr.net/gh/BobAnkh/blog/figures/kswapd0/7b54ce07f625f.png) ![45.9.148.99](https://cdn.jsdelivr.net/gh/BobAnkh/blog/figures/kswapd0/b69342dde711a.png)
 
 于是便查看这个程序的根源出自哪里，使用命令`ls -l /proc/2971/exe`探查：
 
@@ -43,7 +43,7 @@ Illustration: background.jpg
 
 此时，还需要检查出现问题用户的crontab，看是否被写入了定时计划，否则可能定时或者reboot之后又会启动病毒，使用命令`crontab -l -u vagrant`检查：
 
-![crontab](https://image.bobankh.com/2020/07/10/41d832cfb6a41.png)
+![crontab](https://cdn.jsdelivr.net/gh/BobAnkh/blog/figures/kswapd0/41d832cfb6a41.png)
 
 另外，对于该用户，还需要检查其`.ssh`目录下`authorized_keys`是否被配置了后门的ssh的key，本次发现该公钥如下，也是一个知名公钥了：
 

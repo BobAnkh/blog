@@ -26,7 +26,8 @@ LINKS = (('Pelican', 'https://getpelican.com/'),
          ('Jinja2', 'https://jinja.pocoo.org/'),)
 
 # Social widget
-SOCIAL = (('Github', 'https://github.com/BobAnkh'),
+SOCIAL = (('CV', 'https://bobankh.com'),
+          ('Github', 'https://github.com/BobAnkh'),
           ('Email', 'bobankhshen@gmail.com'),)
 
 DEFAULT_PAGINATION = 10
@@ -35,7 +36,7 @@ DEFAULT_PAGINATION = 10
 #RELATIVE_URLS = True
 
 # Static files
-STATIC_PATHS = ['images', 'extra']
+STATIC_PATHS = ['images', 'extra', 'figures']
 EXTRA_PATH_METADATA = {
     'extra/CNAME': {'path': 'CNAME'},
     'extra/robots.txt': {'path': 'robots.txt'},
@@ -81,7 +82,7 @@ THEME = 'themes/nest'
 # Minified CSS
 NEST_CSS_MINIFY = True
 # Add items to top menu before pages
-MENUITEMS = [('Homepage', '/'),('Categories','/categories.html'),('Archives', '/archives.html'),('Github', 'https://github.com/BobAnkh')]
+MENUITEMS = [('Homepage', '/'),('Categories','/categories.html'),('Archives', '/archives.html'),('Github', 'https://github.com/BobAnkh'),('CV', 'https://bobankh.com')]
 # Add header background image from content/images : 'background.jpg'
 NEST_HEADER_IMAGES = 'background.jpg'
 NEST_HEADER_LOGO = '/images/logo.png'

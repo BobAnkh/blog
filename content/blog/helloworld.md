@@ -31,6 +31,4 @@ $$e^{\pi i}+1=0$$
 
 ### Images
 
-Image from self-hosted image hosting powered by [Lsky Pro](https://github.com/wisp-x/lsky-pro):
-
-![images](https://image.bobankh.com/2020/05/21/3d4cb9f4e88aa.jpg)
+![images](https://cdn.jsdelivr.net/gh/BobAnkh/blog/figures/hello_world/3d4cb9f4e88aa.jpg)
