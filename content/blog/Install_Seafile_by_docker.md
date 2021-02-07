@@ -154,3 +154,33 @@ networks:
 在docker-compose.yml的同级目录下运行`docker-compose up -d`即可启动，等待片刻若无问题则可访问对应域名进行相关配置等。
 
 可以使用`docker ps`查看容器运行情况，使用`docker logs seafile`查看seafile主容器输出日志。
+
+## 另附一些Docker使用的技巧：
+
+### 列出所有镜像的ID:
+
+```shell
+docker ps -aq
+```
+
+### 停止所有容器
+
+```shell
+docker stop $(docker ps -aq)
+```
+
+### 删除所有容器
+
+```shell
+docker rm $(docker ps -aq)
+```
+
+也可以使用`docker container prune -f`删除所有停止的容器
+
+### 删除所有镜像
+
+```shell
+docker rmi $(docker images -q)
+```
+
+也可以使用`docker image prune --force --all`或`docker image prune -f -a`删除所有不使用的镜像
