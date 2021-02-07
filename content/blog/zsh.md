@@ -1,10 +1,10 @@
-Title: Configure zsh under Ubuntu
+Title:在Ubuntu下手动配置zsh
 Date: 2021-2-5 14:00
 Category: Linux
 Tags: Linux, Ubuntu, zsh, shell, Download
 Slug: blog/zsh
 Author: BobAnkh
-Summary: 在Linux下手动配置zsh
+Summary: 在Ubuntu下手动配置zsh，并启用插件和主题
 Illustration: background.jpg
 
 [TOC]
