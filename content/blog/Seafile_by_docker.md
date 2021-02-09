@@ -2,7 +2,7 @@ Title: 在Ubuntu下使用Docker搭建Seafile网盘
 Date: 2021-2-7 12:00
 Category: Linux
 Tags: Linux, Ubuntu, Cloud-Storage, Server, Seafile, Docker
-Slug: blog/install_seafile_by_docker
+Slug: blog/seafile_by_docker
 Author: BobAnkh
 Summary: 在Ubuntu下使用Docker搭建Seafile网盘，并使用docker-compose进行编排
 Illustration: background.jpg

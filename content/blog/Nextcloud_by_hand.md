@@ -2,7 +2,7 @@ Title: 搭建Nextcloud私人网盘
 Date: 2020-10-16 23:30
 Category: Linux
 Tags: Linux, Ubuntu, Cloud-Storage, Server, Nextcloud
-Slug: blog/nextcloud_all_by_hand
+Slug: blog/nextcloud_by_hand
 Author: BobAnkh
 Summary: 纯手动搭建Nextcloud私人网盘
 Illustration: background.jpg
