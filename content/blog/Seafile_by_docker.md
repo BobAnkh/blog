@@ -10,58 +10,49 @@ Illustration: background.jpg
 [TOC]
 
 > 默认以root用户进行安装
+>
+> 一键安装bash脚本可见[install-docker-dockercompose.sh](https://github.com/BobAnkh/blog/blob/master/assets/install-docker-dockercompose.sh)，自行下载并谨慎使用，如有问题，概不负责
 
 ## 安装Docker
 
 ```shell
-apt update -y && apt upgrade -y
-sudo apt-get install apt-transport-https ca-certificates curl gnupg-agent software-properties-common -y
+sudo apt update -y
+sudo apt-get install apt-transport-https ca-certificates curl gnupg lsb-release -y
 ```
 
 添加gpg秘钥并检查
 
 ```shell
 # 官方命令如下，国内安装可使用镜像源
-# curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
-curl -fsSL https://mirrors.ustc.edu.cn/docker-ce/linux/ubuntu/gpg | sudo apt-key add -
-apt-key fingerprint 0EBFCD88
-```
-
-如果终端输出为如下内容则说明gpg秘钥添加成功
-
-```console
-pub   rsa4096 2017-02-22 [SCEA]
-      9DC8 5822 9FC7 DD38 854A  E2D8 8D81 803C 0EBF CD88
-uid           [ unknown] Docker Release (CE deb) <docker@docker.com>
-sub   rsa4096 2017-02-22 [S]
+# curl -fsSL https://mirrors.ustc.edu.cn/docker-ce/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
 ```
 
 添加仓库
 
 ```shell
 # 官方仓库如下，国内安装可使用镜像
-# add-apt-repository \
-#    "deb [arch=amd64] https://download.docker.com/linux/ubuntu \
-#    $(lsb_release -cs) \
-#    stable"
-add-apt-repository \
-   "deb [arch=amd64] https://mirrors.ustc.edu.cn/docker-ce/linux/ubuntu/ \
-  $(lsb_release -cs) \
-  stable"
+# echo \
+#   "deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://mirrors.ustc.edu.cn/docker-ce/linux/ubuntu/ \
+#   $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+echo \
+  "deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu \
+  $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
 ```
 
 ```shell
-apt update -y
-apt-get install docker-ce docker-ce-cli containerd.io -y
+sudo apt update -y
+sudo apt-get install docker-ce docker-ce-cli containerd.io -y
 ```
 
-运行一下命令来检查Docker是否安装成功
+运行以下命令来检查Docker是否安装成功
 
 ```shell
-docker run hello-world
+sudo docker --version
+sudo docker run hello-world
 ```
 
-若输出以下内容，则说明Docker已经安装成功：
+若除docker版本外，能够输出以下内容，则说明Docker已经安装成功：
 
 ```console
 Unable to find image 'hello-world:latest' locally
@@ -92,12 +83,20 @@ For more examples and ideas, visit:
  https://docs.docker.com/get-started/
 ```
 
+若想以非root用户不带sudo地来运行docker，可以使用下述命令：
+
+```shell
+sudo usermod -aG docker $USER
+```
+
 ## 安装docker-compose
 
 > 使用docker-compose来编排会更为容易一些
 
 ```shell
-apt-get install docker-compose -y
+sudo curl -L "https://github.com/docker/compose/releases/download/1.28.6/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+sudo chmod +x /usr/local/bin/docker-compose
+sudo docker-compose --version
 ```
 
 ## 编写docker-compose.yml
