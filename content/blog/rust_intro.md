@@ -230,7 +230,7 @@ println!("b = {}", b);
 
 - 数字，整型包括：
 
-    | 长度    | 有符号  | 无符号  |
+    | 长度    | 有符号   | 无符号  |
     | ------- | ------- | ------- |
     | 8-bit   | `i8`    | `u8`    |
     | 16-bit  | `i16`   | `u16`   |
@@ -243,10 +243,10 @@ println!("b = {}", b);
 
     浮点型包括：
 
-    | 长度   | 浮点数 |
+    | 长度   | 浮点数  |
     | ------ | ------ |
-    | 32-bit | f32    |
-    | 64-bit | f64    |
+    | 32-bit | `f32`  |
+    | 64-bit | `f64`  |
 
     Rust不一定要显式指定变量类型，编译器会推测变量类型，如整型默认为i32，浮点型默认为f64等。
 
@@ -311,16 +311,16 @@ println!("result = {}", result);
 
 - if-else语句
 
-  `if <condition> {<expression>} else {<expression>}`。具体例如：
+    `if <condition> {<expression>} else {<expression>}`。具体例如：
 
-  ```rust
-  let x = 1;
-  if x == 2 {
-      println!("Yes, x = 2!");
-  } else {
-      println!("No, x != 2!");
-  }
-  ```
+    ```rust
+    let x = 1;
+    if x == 2 {
+        println!("Yes, x = 2!");
+    } else {
+        println!("No, x != 2!");
+    }
+    ```
 
   运行这段代码，可以看到`No, x != 2!`被输出在终端上。
 
