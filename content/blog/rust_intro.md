@@ -4,10 +4,8 @@ Category: Language
 Tags: Language, Rust
 Slug: blog/rust_intro
 Author: BobAnkh
-Summary: 编程语言Rust的基本介绍与简单语法入门
+Summary: 本篇文章主要介绍Rust及其安装和开发环境的配置，加上基本构建过程和简单语法。相对高级的语法诸如所有权、生命周期、Trait、闭包等将留到以后介绍。
 Illustration: background.jpg
-
-> 本篇文章主要介绍Rust及其安装和开发环境的配置，加上基本构建过程和简单语法。相对高级的语法诸如所有权、生命周期、Trait、闭包等将留到以后介绍
 
 [TOC]
 
@@ -300,12 +298,12 @@ println!("result = {}", result);
 
     `if <condition> {<expression>}`。具体例如：
 
-    ```rust
-    let x = 1;
-    if x == 1 {
-        println!("Yes, x = 1!");
-    }
-    ```
+```rust
+let x = 1;
+if x == 1 {
+    println!("Yes, x = 1!");
+}
+```
 
     运行这段代码，可以看到`Yes, x = 1!`被输出在终端上。
 
@@ -313,14 +311,14 @@ println!("result = {}", result);
 
     `if <condition> {<expression>} else {<expression>}`。具体例如：
 
-    ```rust
-    let x = 1;
-    if x == 2 {
-        println!("Yes, x = 2!");
-    } else {
-        println!("No, x != 2!");
-    }
-    ```
+```rust
+let x = 1;
+if x == 2 {
+    println!("Yes, x = 2!");
+} else {
+    println!("No, x != 2!");
+}
+```
 
   运行这段代码，可以看到`No, x != 2!`被输出在终端上。
 
@@ -328,33 +326,33 @@ println!("result = {}", result);
 
     其实就是上面这样结构的嵌套，例如：
 
-    ```rust
-    let x = 3;
-    if x == 1 {
-        println!("Yes, x = 1!")
-    } else if x == 2 {
-        println!("Yes, x = 2!")
-    } else if x == 3 {
-        println!("Yes, x = 3!")
-    } else {
-        println!("No, this is Wrong")
-    }
-    ```
+```rust
+let x = 3;
+if x == 1 {
+    println!("Yes, x = 1!")
+} else if x == 2 {
+    println!("Yes, x = 2!")
+} else if x == 3 {
+    println!("Yes, x = 3!")
+} else {
+    println!("No, this is Wrong")
+}
+```
 
     运行这段代码，可以看到`Yes, x = 3!`被输出在终端上。
 
 - 在let定义中使用if语句
 
-    ```rust
-    let y = 10;
-    let condition = true;
-    let x = if condition { 
-        y + 1 
-    } else { 
-        6 
-    };
-    println!("x = {}", x);
-    ```
+```rust
+let y = 10;
+let condition = true;
+let x = if condition { 
+    y + 1 
+} else { 
+    6 
+};
+println!("x = {}", x);
+```
 
     如上所示，因为要返回值，所以`{}`内的表达式是无分号的（代码块的值是其最后一个表达式的值），但是外部定义的是一个完整的let表达式，所以最后是有分号的。运行这段代码，可以看到`x = 11`被输出在终端上。
 
@@ -362,33 +360,33 @@ println!("result = {}", result);
 
     `loop {<expression>}`
 
-    ```rust
-    let mut counter: u32 = 0;
-    loop {
-        println!("Count: {}", counter);
-        if counter == 9 {
-            println!("Exit Loop!");
-            break;
-        }
-        //counter = counter + 1;
-        counter += 1;
+```rust
+let mut counter: u32 = 0;
+loop {
+    println!("Count: {}", counter);
+    if counter == 9 {
+        println!("Exit Loop!");
+        break;
     }
-    ```
+    //counter = counter + 1;
+    counter += 1;
+}
+```
 
     因为需要计数，所以这里定义了一个可变变量`counter`。在`loop`中，可以使用`break`语句退出循环。运行上述代码，会从`Count: 0`一直打印到`Count: 9`后打印`Exit Loop!`并退出。
 
 - 在let定义中使用loop语句
 
-    ```rust
-    let y = loop {
-        counter += 1;
-        if counter == 20 {
-            // return value when break
-            break counter * 2;
-        }
-    };
-    println!("y = {}", y);
-    ```
+```rust
+let y = loop {
+    counter += 1;
+    if counter == 20 {
+        // return value when break
+        break counter * 2;
+    }
+};
+println!("y = {}", y);
+```
 
     大致同上，只不过这里在break的同时返回了`counter`乘2的值，作为y的值。运行上述代码，可以看到打印出`y = 40`的结果。
 
@@ -396,13 +394,13 @@ println!("result = {}", result);
 
     `while <condition> {<expression>}`
 
-    ```rust
-    let mut i = 0;
-    while i != 10 {
-        i += 1;
-    }
-    println!("i = {}", i);
-    ```
+```rust
+let mut i = 0;
+while i != 10 {
+    i += 1;
+}
+println!("i = {}", i);
+```
 
     此处即在`i`不等于10的时候给`i`不断加1，直到`i`等于10的时候退出while循环。运行上述代码，可以看到打印出`i = 10`的结果
 
@@ -410,18 +408,20 @@ println!("result = {}", result);
 
     我们可以使用for循环来遍历数组中的元素
 
-    ```rust
-    let arr: [u32; 5] = [1, 2, 3, 4, 5];
-    for element in arr.iter() {
-        println!("element = {}", element);
-    }
-    for element in &arr {
-        println!("element = {}", element);
-    }
-    ```
+```rust
+let arr: [u32; 5] = [1, 2, 3, 4, 5];
+for element in arr.iter() {
+    println!("element = {}", element);
+}
+for element in &arr {
+    println!("element = {}", element);
+}
+```
 
     定义了一个数组`arr`并初始化其内元素，主要可以采用上述两种方式顺序取出其内各元素。
 
 ## 6 结语
+
+事实上，Rust的编译器是相对较为严格的，而且提示和警告也比较清晰，不少时候出现编译问题直接按照编译器提示修改即可；而复杂程序过了编译器之后，出现运行时错误的概率也会大大降低~~虽然与编译器斗智斗勇也是一个必然过程~~
 
 以上就是对于Rust这门编程语言的基本介绍和简单语法入门，更多内容留待后续再言，或可直接阅读官方教程 [The Book](https://doc.rust-lang.org/stable/book/) 来进行更加深入的学习（Rust的官方教程真的写的很好）。
