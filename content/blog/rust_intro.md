@@ -382,7 +382,6 @@ let y = loop {
 println!("y = {}", y);
 ```
 
-
 - while循环
 
     `while <condition> {<expression>}`。例如如下代码，即在`i`不等于10的时候给`i`不断加1，直到`i`等于10的时候退出while循环。运行这段代码，可以看到打印出`i = 10`的结果：
