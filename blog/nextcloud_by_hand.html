@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="description" content="注意：作为root用户进行工作或在对应命令前加上sudo 注意：部分命令可能根据安装版本不同需要略微调整 基本部分 1. 输入以下指令安装相关内容 apt-add-repository ppa:ondrej/php &amp;&amp; apt update -y &amp;&amp; apt upgrade -y apt install apache2 -y service apache2 start apt...">
+        <meta name="keywords" content="Cloud-Storage, Linux, Nextcloud, Server, Ubuntu">
+        <link rel="icon" href="https://cdn.jsdelivr.net/gh/BobAnkh/blog/favicon.ico">
+
+        <title>搭建Nextcloud私人网盘 - BobAnkh's Blog</title>
+
+        <!-- Stylesheets -->
+        <!--         <link href="https://blog.bobankh.com/theme/css/all.min.css" rel="stylesheet">
+ -->
+        <link href="https://cdn.jsdelivr.net/gh/BobAnkh/blog/theme/css/all.min.css" rel="stylesheet">
+        <!-- /Stylesheets -->
+
+        <!-- RSS Feeds -->
+        <!-- /RSS Feeds -->
+
+        <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+        <!--[if lt IE 9]>
+          <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+          <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+        <![endif]-->
+
+
+
+    </head>
+
+    <body>
+
+        <!-- Header -->
+    <div class="header-container" style="background: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), url('https://blog.bobankh.com/images/background.jpg'); background-position: center; ">
+
+            <!-- Static navbar -->
+            <div class="container">
+                <div class="header-nav">
+                    <div class="header-logo">
+                        <a class="pull-left" href="https://blog.bobankh.com/"><img class="mr20" src="https://cdn.jsdelivr.net/gh/BobAnkh/blog/images/logo.png" alt="logo">BobAnkh's Blog</a>
+                    </div>
+                    <div class="nav pull-right">
+                                <a href="https://blog.bobankh.com/">Homepage</a>
+                                <a href="https://blog.bobankh.com/categories.html">Categories</a>
+                                <a href="https://blog.bobankh.com/archives.html">Archives</a>
+                                <a href="https://github.com/BobAnkh">Github</a>
+                                <a href="https://bobankh.com">CV</a>
+                    </div>
+                </div>
+            </div>
+            <!-- /Static navbar -->
+
+            <!-- Header -->
+    <!-- Header -->
+    <div class="container header-wrapper">
+        <div class="row">
+              <div class="col-lg-12">
+                  <div class="header-content">
+                      <h1 class="header-title">搭建Nextcloud私人网盘</h1>
+                      <p class="header-date">Written By <a href="https://blog.bobankh.com/author/bobankh.html">BobAnkh</a>, 2020-10-16(Fri), in Category <a href="https://blog.bobankh.com/category/linux.html">Linux</a></p>
+                      <div class="header-underline"></div>
+                      <div class="clearfix"></div>
+                      <p class="pull-right header-tags">
+                          <span class="glyphicon glyphicon-tags mr5" aria-hidden="true"></span>
+<a href="https://blog.bobankh.com/tag/cloud-storage.html">Cloud-Storage</a>, <a href="https://blog.bobankh.com/tag/linux.html">Linux</a>, <a href="https://blog.bobankh.com/tag/nextcloud.html">Nextcloud</a>, <a href="https://blog.bobankh.com/tag/server.html">Server</a>, <a href="https://blog.bobankh.com/tag/ubuntu.html">Ubuntu</a>                      </p>
+                  </div>
+              </div>
+        </div>
+    </div>
+    <!-- /Header -->
+            <!-- /Header -->
+
+        </div>
+        <!-- /Header -->
+
+
+        <!-- Content -->
+
+    <div class="container content">
+            <h2>摘要</h2>
+            <p>纯手动搭建Nextcloud私人网盘</p>
+            <nav class="toc">
+            <h2>目录</h2>
+            <div class="toc">
+<ul>
+<li><a href="#_1">基本部分</a><ul>
+<li><a href="#1">1. 输入以下指令安装相关内容</a></li>
+<li><a href="#2-apache2">2. 修改apache2相关配置</a></li>
+<li><a href="#3">3. 处理数据库</a></li>
+<li><a href="#4-nextcloud">4. 正式安装nextcloud</a></li>
+<li><a href="#5-ssl">5. 进行SSL部署</a></li>
+</ul>
+</li>
+<li><a href="#_2">进阶部分</a><ul>
+<li><a href="#1_1">1. 可以配置内存缓存</a></li>
+<li><a href="#2-nextcloudurlindexphp">2. 访问Nextcloud时，url中会含有index.php，可以去除</a></li>
+</ul>
+</li>
+</ul>
+</div>
+            </nav>
+        
+<blockquote>
+<p>注意：作为root用户进行工作或在对应命令前加上sudo</p>
+<p>注意：部分命令可能根据安装版本不同需要略微调整</p>
+</blockquote>
+<h2 id="_1">基本部分</h2>
+<h3 id="1">1. 输入以下指令安装相关内容</h3>
+<div class="highlight"><pre><span></span><code><span class="go">apt-add-repository ppa:ondrej/php &amp;&amp; apt update -y &amp;&amp; apt upgrade -y</span>
+<span class="go">apt install apache2 -y</span>
+<span class="go">service apache2 start</span>
+<span class="go">apt install php7.3 libapache2-mod-php7.3 php7.3-mbstring -y</span>
+<span class="go">apt install php7.3-zip php7.3-dom php7.3-xml php7.3-gd php7.3-curl -y</span>
+<span class="go">service apache2 restart</span>
+
+<span class="gp">#</span><span class="nb">test</span>
+<span class="go">echo "&lt;?php phpinfo() ?&gt;" &gt; /var/www/html/phpinfo.php</span>
+<span class="gp">#</span>此时访问ip可以查看页面
+</code></pre></div>
+<p>目前设计的目录结构为:</p>
+<div class="highlight"><pre><span></span><code>#ideal structure
+/cloudserver
+.
+|--data
+|--log
+`--nextcloud
+</code></pre></div>
+<h3 id="2-apache2">2. 修改apache2相关配置</h3>
+<div class="highlight"><pre><span></span><code><span class="go">vim /etc/apache2/sites-enabled/000-default.conf</span>
+</code></pre></div>
+<p>内容如下自行修改：</p>
+<div class="highlight"><pre><span></span><code>&lt;VirtualHost *:80&gt;
+修改为：
+&lt;VirtualHost 你的域名:80&gt;
+
+#ServerName www.example.com
+修改为
+ServerName 你的域名
+
+ServerAdmin webmaster@localhost
+DocumentRoot /var/www/html
+修改为
+ServerAdmin 你的邮箱地址
+DocumentRoot /cloudserver/nextcloud
+
+ErrorLog ${APACHE_LOG_DIR}/error.log
+CustomLog ${APACHE_LOG_DIR}/access.log combined
+修改为
+ErrorLog /cloudserver/log/error.log
+CustomLog /cloudserver/log/access.log combined
+</code></pre></div>
+<p>最后再修改一下apache2.conf，文件位于/etc/apache2/apache2.conf，不修改的话会403报错</p>
+<div class="highlight"><pre><span></span><code><span class="go">vim /etc/apache2/apache2.conf</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>&lt;Directory /var/www&gt;
+        Options Indexes FollowSymLinks
+        AllowOverride None
+        Require all granted
+&lt;/Directory&gt;
+修改为
+&lt;Directory /cloudserver&gt;
+        Options Indexes FollowSymLinks
+        AllowOverride None
+        Require all granted
+&lt;/Directory&gt;
+</code></pre></div>
+<p>然后启动apache2:</p>
+<div class="highlight"><pre><span></span><code><span class="go">service apache2 start</span>
+</code></pre></div>
+<h3 id="3">3. 处理数据库</h3>
+<div class="highlight"><pre><span></span><code><span class="go">apt install mysql-server -y</span>
+<span class="go">apt install php7.3-mysql -y</span>
+
+<span class="gp">#</span>登录mysql
+<span class="go">mysql -u root -p</span>
+
+<span class="gp">#</span>创建名为nextcloud的数据库
+<span class="go">mysql&gt; CREATE DATABASE nextcloud;</span>
+
+<span class="gp">#</span>切换数据库
+<span class="go">mysql&gt; USE nextcloud;</span>
+
+<span class="gp">#</span>创建名为nextcloud的用户，密码为password，并赋予相关权限
+<span class="gp">#</span>mysql8.0之前也可使用下述语句，而8.0之后使用次语句会出现授权问题
+<span class="gp">#</span>mysql&gt; GRANT All  ON nextcloud.* TO nextcloud@localhost IDENTIFIED BY <span class="s1">'password'</span><span class="p">;</span>
+<span class="go">mysql&gt; CREATE USER nextcloud@localhost IDENTIFIED WITH mysql_native_password BY 'password';</span>
+<span class="go">mysql&gt; GRANT All  ON nextcloud.* TO nextcloud@localhost;</span>
+
+<span class="gp">#</span>登出mysql
+<span class="go">mysql&gt; exit</span>
+</code></pre></div>
+<h3 id="4-nextcloud">4. 正式安装nextcloud</h3>
+<div class="highlight"><pre><span></span><code><span class="go">cd /cloudserver/nextcloud</span>
+<span class="go">rm -rf *</span>
+<span class="go">wget https://download.nextcloud.com/server/releases/nextcloud-18.0.4.zip</span>
+<span class="go">apt install unzip -y</span>
+<span class="go">unzip nextcloud-18.0.4.zip</span>
+<span class="go">rm nextcloud-18.0.4.zip</span>
+<span class="go">mv nextcloud/* ../nextcloud/</span>
+<span class="go">rm -rf nextcloud/</span>
+</code></pre></div>
+<p>新建一个脚本:</p>
+<div class="highlight"><pre><span></span><code><span class="go">vim set.sh</span>
+</code></pre></div>
+<p>复制以下内容并保存:</p>
+<div class="highlight"><pre><span></span><code><span class="ch">#!/bin/bash</span>
+<span class="nv">ocpath</span><span class="o">=</span><span class="s1">'/cloudserver/nextcloud'</span>
+<span class="nv">htuser</span><span class="o">=</span><span class="s1">'www-data'</span>
+<span class="nv">htgroup</span><span class="o">=</span><span class="s1">'www-data'</span>
+<span class="nv">rootuser</span><span class="o">=</span><span class="s1">'root'</span>
+<span class="nb">printf</span> <span class="s2">"Creating possible missing Directories\n"</span>
+mkdir -p <span class="nv">$ocpath</span>/data
+mkdir -p <span class="nv">$ocpath</span>/assets
+mkdir -p <span class="nv">$ocpath</span>/updater
+
+<span class="nb">printf</span> <span class="s2">"chmod Files and Directories\n"</span>
+find <span class="si">${</span><span class="nv">ocpath</span><span class="si">}</span>/ -type f -print0 <span class="p">|</span> xargs -0 chmod <span class="m">0640</span>
+find <span class="si">${</span><span class="nv">ocpath</span><span class="si">}</span>/ -type d -print0 <span class="p">|</span> xargs -0 chmod <span class="m">0750</span>
+
+<span class="nb">printf</span> <span class="s2">"chown Directories\n"</span>
+chown -R <span class="si">${</span><span class="nv">rootuser</span><span class="si">}</span>:<span class="si">${</span><span class="nv">htgroup</span><span class="si">}</span> <span class="si">${</span><span class="nv">ocpath</span><span class="si">}</span>/
+chown -R <span class="si">${</span><span class="nv">htuser</span><span class="si">}</span>:<span class="si">${</span><span class="nv">htgroup</span><span class="si">}</span> <span class="si">${</span><span class="nv">ocpath</span><span class="si">}</span>/apps/
+chown -R <span class="si">${</span><span class="nv">htuser</span><span class="si">}</span>:<span class="si">${</span><span class="nv">htgroup</span><span class="si">}</span> <span class="si">${</span><span class="nv">ocpath</span><span class="si">}</span>/assets/
+chown -R <span class="si">${</span><span class="nv">htuser</span><span class="si">}</span>:<span class="si">${</span><span class="nv">htgroup</span><span class="si">}</span> <span class="si">${</span><span class="nv">ocpath</span><span class="si">}</span>/config/
+chown -R <span class="si">${</span><span class="nv">htuser</span><span class="si">}</span>:<span class="si">${</span><span class="nv">htgroup</span><span class="si">}</span> <span class="si">${</span><span class="nv">ocpath</span><span class="si">}</span>/data/
+chown -R <span class="si">${</span><span class="nv">htuser</span><span class="si">}</span>:<span class="si">${</span><span class="nv">htgroup</span><span class="si">}</span> <span class="si">${</span><span class="nv">ocpath</span><span class="si">}</span>/themes/
+chown -R <span class="si">${</span><span class="nv">htuser</span><span class="si">}</span>:<span class="si">${</span><span class="nv">htgroup</span><span class="si">}</span> <span class="si">${</span><span class="nv">ocpath</span><span class="si">}</span>/updater/
+
+chmod +x <span class="si">${</span><span class="nv">ocpath</span><span class="si">}</span>/occ
+<span class="nb">printf</span> <span class="s2">"chmod/chown .htaccess\n"</span>
+<span class="k">if</span> <span class="o">[</span> -f <span class="si">${</span><span class="nv">ocpath</span><span class="si">}</span>/.htaccess <span class="o">]</span>
+  <span class="k">then</span>
+  chmod <span class="m">0644</span> <span class="si">${</span><span class="nv">ocpath</span><span class="si">}</span>/.htaccess
+  chown <span class="si">${</span><span class="nv">rootuser</span><span class="si">}</span>:<span class="si">${</span><span class="nv">htgroup</span><span class="si">}</span> <span class="si">${</span><span class="nv">ocpath</span><span class="si">}</span>/.htaccess
+<span class="k">fi</span>
+<span class="k">if</span> <span class="o">[</span> -f <span class="si">${</span><span class="nv">ocpath</span><span class="si">}</span>/data/.htaccess <span class="o">]</span>
+ <span class="k">then</span>
+  chmod <span class="m">0644</span> <span class="si">${</span><span class="nv">ocpath</span><span class="si">}</span>/data/.htaccess
+  chown <span class="si">${</span><span class="nv">rootuser</span><span class="si">}</span>:<span class="si">${</span><span class="nv">htgroup</span><span class="si">}</span> <span class="si">${</span><span class="nv">ocpath</span><span class="si">}</span>/data/.htaccess
+<span class="k">fi</span>
+</code></pre></div>
+<p>执行上述脚本:</p>
+<div class="highlight"><pre><span></span><code><span class="go">chmod +x set.sh</span>
+<span class="go">sh set.sh</span>
+
+<span class="go">chmod -Rf 770 /cloudserver/data/</span>
+<span class="go">chown -Rf www-data:www-data /cloudserver/data/</span>
+
+<span class="go">service apache2 restart</span>
+</code></pre></div>
+<p>访问web进行配置（也可以先不访问，后续再配置）。这里其实是最简单但也很有可能出错的地方，主要是两个地方：数据目录和数据库配置。数据目录要填写绝对目录，最后不带“/”，而且要保证这个目录至少拥有750权限、用户名和组为www-data</p>
+<h3 id="5-ssl">5. 进行SSL部署</h3>
+<div class="highlight"><pre><span></span><code><span class="gp">#</span>LET<span class="err">'</span>S ENCRYPT
+<span class="go">apt install certbot python3-certbot-apache -y</span>
+<span class="go">certbot --apache</span>
+<span class="go">service apache2 restart</span>
+</code></pre></div>
+<p>刚才不登录这里就不用改了</p>
+<div class="highlight"><pre><span></span><code><span class="go">vim /cloudserver/nextcloud/config/config.php</span>
+</code></pre></div>
+<p>修改:</p>
+<div class="highlight"><pre><span></span><code>'overwrite.cli.url' =&gt; 'http:yoursite'
+change to 'overwrite.cli.url' =&gt; 'https:yoursite'
+</code></pre></div>
+<p>继续配置SSL:</p>
+<div class="highlight"><pre><span></span><code><span class="go">vim /etc/apache2/sites-enabled/000-default-le-ssl.conf</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>在第一行加入
+LoadModule headers_module /usr/lib/apache2/modules/mod_headers.so
+在&lt;VirtualHost 你的域名&gt;和&lt;/VirtualHost&gt;之间加入
+&lt;IfModule mod_headers.c&gt;
+      Header always set Strict-Transport-Security "max-age=15552000; includeSubDomains; preload"
+&lt;/IfModule&gt;
+</code></pre></div>
+<p>重启web服务器:</p>
+<div class="highlight"><pre><span></span><code><span class="go">service apache2 restart</span>
+</code></pre></div>
+<p>此时全部内容已安装完成，访问web端填写对应信息即可</p>
+<h2 id="_2">进阶部分</h2>
+<h3 id="1_1">1. 可以配置内存缓存</h3>
+<div class="highlight"><pre><span></span><code><span class="go">apt install php-apcu memcached php-memcached -y</span>
+</code></pre></div>
+<p>在nextcloud/config/config.php中加入以下内容:</p>
+<div class="highlight"><pre><span></span><code><span class="x">'memcache.local' =&gt; '\OC\Memcache\APCu',</span>
+<span class="x">  'memcache.distributed' =&gt; '\OC\Memcache\Memcached',</span>
+<span class="x">  'memcached_servers' =&gt; array(</span>
+<span class="x">     array('localhost', 11211),</span>
+<span class="x">     ),</span>
+</code></pre></div>
+<p>一个完整的config.php文件示例:</p>
+<div class="highlight"><pre><span></span><code><span class="cp">&lt;?php</span>
+<span class="nv">$CONFIG</span> <span class="o">=</span> <span class="k">array</span> <span class="p">(</span>
+  <span class="s1">'instanceid'</span> <span class="o">=&gt;</span> <span class="s1">'ocwFEEGDExfd9'</span><span class="p">,</span>
+  <span class="s1">'passwordsalt'</span> <span class="o">=&gt;</span> <span class="s1">'ajfjrgahughurhgodsi'</span><span class="p">,</span>
+  <span class="s1">'secret'</span> <span class="o">=&gt;</span> <span class="s1">'N7CzQTEXU5Fefefdf/xaf+3afrggdrtGRergsGVlLPgQzlnVm'</span><span class="p">,</span>
+  <span class="s1">'trusted_domains'</span> <span class="o">=&gt;</span>
+  <span class="k">array</span> <span class="p">(</span>
+    <span class="mi">0</span> <span class="o">=&gt;</span> <span class="s1">'cloud.nosu.win'</span><span class="p">,</span>
+  <span class="p">),</span>
+  <span class="s1">'datadirectory'</span> <span class="o">=&gt;</span> <span class="s1">'/cloudserver/data'</span><span class="p">,</span>
+  <span class="s1">'overwrite.cli.url'</span> <span class="o">=&gt;</span> <span class="s1">'http://cloud.nosu.win'</span><span class="p">,</span>
+  <span class="s1">'dbtype'</span> <span class="o">=&gt;</span> <span class="s1">'mysql'</span><span class="p">,</span>
+  <span class="s1">'version'</span> <span class="o">=&gt;</span> <span class="s1">'11.0.2.7'</span><span class="p">,</span>
+  <span class="s1">'dbname'</span> <span class="o">=&gt;</span> <span class="s1">'db'</span><span class="p">,</span>
+  <span class="s1">'dbhost'</span> <span class="o">=&gt;</span> <span class="s1">'localhost'</span><span class="p">,</span>
+  <span class="s1">'dbport'</span> <span class="o">=&gt;</span> <span class="s1">''</span><span class="p">,</span>
+  <span class="s1">'dbtableprefix'</span> <span class="o">=&gt;</span> <span class="s1">'db_'</span><span class="p">,</span>
+  <span class="s1">'dbuser'</span> <span class="o">=&gt;</span> <span class="s1">'db'</span><span class="p">,</span>
+  <span class="s1">'dbpassword'</span> <span class="o">=&gt;</span> <span class="s1">'dbpasswd'</span><span class="p">,</span>
+  <span class="s1">'logtimezone'</span> <span class="o">=&gt;</span> <span class="s1">'UTC'</span><span class="p">,</span>
+  <span class="s1">'installed'</span> <span class="o">=&gt;</span> <span class="k">true</span><span class="p">,</span>
+  <span class="s1">'memcache.local'</span> <span class="o">=&gt;</span> <span class="s1">'\OC\Memcache\APCu'</span><span class="p">,</span>
+  <span class="s1">'memcache.distributed'</span> <span class="o">=&gt;</span> <span class="s1">'\OC\Memcache\Memcached'</span><span class="p">,</span>
+  <span class="s1">'memcached_servers'</span> <span class="o">=&gt;</span> <span class="k">array</span><span class="p">(</span>
+     <span class="k">array</span><span class="p">(</span><span class="s1">'localhost'</span><span class="p">,</span> <span class="mi">11211</span><span class="p">),</span>
+     <span class="p">),</span>
+<span class="p">);</span>
+</code></pre></div>
+<h3 id="2-nextcloudurlindexphp">2. 访问Nextcloud时，url中会含有index.php，可以去除</h3>
+<p>在config.php中加入:</p>
+<div class="highlight"><pre><span></span><code><span class="x">'htaccess.RewriteBase' =&gt; '/',</span>
+</code></pre></div>
+<p>执行</p>
+<div class="highlight"><pre><span></span><code><span class="go">sudo -u www-data php occ maintenance:update:htaccess</span>
+</code></pre></div>
+        <h2>Other Articles</h2>
+            <h3>Previous Article: 
+                <a href="https://blog.bobankh.com/blog/salsify_zh.html">
+                    Salsify: 通过视频编解码器和传输协议之间更紧密的集成来实现低延迟网络视频
+                </a>
+            </h3>
+            <h3>Next Article: 
+                <a href="https://blog.bobankh.com/blog/zsh.html">
+                    在Ubuntu下手动配置zsh
+                </a>
+            </h3>
+
+
+    <div class="comments">
+        <div id="disqus_thread"></div>
+            <script type="text/javascript">
+                var disqus_shortname = 'blog-bobankh-com';
+                var disqus_identifier = 'blog/nextcloud_by_hand.html';
+                var disqus_url = 'https://blog.bobankh.com/blog/nextcloud_by_hand.html';
+                (function() {
+                    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+                    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+                })();
+            </script>
+        <noscript>Please enable JavaScript to view the comments.</noscript>
+    </div>
+        
+    </div>
+        <!-- /Content --> 
+
+        <!-- Footer -->
+        <div class="footer gradient-2">
+            <div class="container footer-container ">
+                <div class="row">
+                    <div class="col-xs-4 col-sm-3 col-md-3 col-lg-3">
+                        <div class="footer-title">Sitemap</div>
+                        <ul class="list-unstyled">
+                            <li><a href="https://blog.bobankh.com/archives.html">Archives</a></li>
+                            <li><a href="https://blog.bobankh.com/tags.html">Tags</a></li>
+                            <li><a href="https://blog.bobankh.com/authors.html">Authors</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-xs-4 col-sm-3 col-md-3 col-lg-3">
+                        <div class="footer-title">Social</div>
+                        <ul class="list-unstyled">
+                            <li><a href="https://bobankh.com" target="_blank">CV</a></li>
+                            <li><a href="https://github.com/BobAnkh" target="_blank">Github</a></li>
+                            <li><a href="bobankhshen@gmail.com" target="_blank">Email</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-xs-4 col-sm-3 col-md-3 col-lg-3">
+                        <div class="footer-title">Links</div>
+                        <ul class="list-unstyled">
+                            <li><a href="https://getpelican.com/" target="_blank">Pelican</a></li>
+                            <li><a href="https://python.org/" target="_blank">Python.org</a></li>
+                            <li><a href="https://jinja.pocoo.org/" target="_blank">Jinja2</a></li>
+                        </ul>
+                    </div> 
+                    <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3">
+                        <p class="pull-right text-right">
+                            <small><em>Proudly powered by <a href="https://docs.getpelican.com/" target="_blank">pelican</a></em></small><br/>
+                            <small><em>Theme powered by <a href="https://github.com/molivier" target="_blank">molivier</a></em></small><br/>
+                            <small>&copy; BobAnkh 2020</small>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /Footer -->
+    </body>
+</html>

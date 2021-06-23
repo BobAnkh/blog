@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="description" content="注意：作为root用户进行工作或在对应命令前加上sudo 1. 安装 transmission-daemon 只需要在你的终端输入以下命令即可完成安装: apt install transmission-daemon -y 2. 修改 settings.json 首先你需要先停止 transmission-daemon 然后再修改配置文件 配置文件 settings.json 通常会在目录...">
+        <meta name="keywords" content="Download, Linux, Server, Transmission, Ubuntu">
+        <link rel="icon" href="https://cdn.jsdelivr.net/gh/BobAnkh/blog/favicon.ico">
+
+        <title>在Ubuntu下安装Transmission - BobAnkh's Blog</title>
+
+        <!-- Stylesheets -->
+        <!--         <link href="https://blog.bobankh.com/theme/css/all.min.css" rel="stylesheet">
+ -->
+        <link href="https://cdn.jsdelivr.net/gh/BobAnkh/blog/theme/css/all.min.css" rel="stylesheet">
+        <!-- /Stylesheets -->
+
+        <!-- RSS Feeds -->
+        <!-- /RSS Feeds -->
+
+        <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+        <!--[if lt IE 9]>
+          <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+          <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+        <![endif]-->
+
+
+
+    </head>
+
+    <body>
+
+        <!-- Header -->
+    <div class="header-container" style="background: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), url('https://blog.bobankh.com/images/background.jpg'); background-position: center; ">
+
+            <!-- Static navbar -->
+            <div class="container">
+                <div class="header-nav">
+                    <div class="header-logo">
+                        <a class="pull-left" href="https://blog.bobankh.com/"><img class="mr20" src="https://cdn.jsdelivr.net/gh/BobAnkh/blog/images/logo.png" alt="logo">BobAnkh's Blog</a>
+                    </div>
+                    <div class="nav pull-right">
+                                <a href="https://blog.bobankh.com/">Homepage</a>
+                                <a href="https://blog.bobankh.com/categories.html">Categories</a>
+                                <a href="https://blog.bobankh.com/archives.html">Archives</a>
+                                <a href="https://github.com/BobAnkh">Github</a>
+                                <a href="https://bobankh.com">CV</a>
+                    </div>
+                </div>
+            </div>
+            <!-- /Static navbar -->
+
+            <!-- Header -->
+    <!-- Header -->
+    <div class="container header-wrapper">
+        <div class="row">
+              <div class="col-lg-12">
+                  <div class="header-content">
+                      <h1 class="header-title">在Ubuntu下安装Transmission</h1>
+                      <p class="header-date">Written By <a href="https://blog.bobankh.com/author/bobankh.html">BobAnkh</a>, 2020-06-16(Tue), Modified at 2020-06-19(Fri), in Category <a href="https://blog.bobankh.com/category/linux.html">Linux</a></p>
+                      <div class="header-underline"></div>
+                      <div class="clearfix"></div>
+                      <p class="pull-right header-tags">
+                          <span class="glyphicon glyphicon-tags mr5" aria-hidden="true"></span>
+<a href="https://blog.bobankh.com/tag/download.html">Download</a>, <a href="https://blog.bobankh.com/tag/linux.html">Linux</a>, <a href="https://blog.bobankh.com/tag/server.html">Server</a>, <a href="https://blog.bobankh.com/tag/transmission.html">Transmission</a>, <a href="https://blog.bobankh.com/tag/ubuntu.html">Ubuntu</a>                      </p>
+                  </div>
+              </div>
+        </div>
+    </div>
+    <!-- /Header -->
+            <!-- /Header -->
+
+        </div>
+        <!-- /Header -->
+
+
+        <!-- Content -->
+
+    <div class="container content">
+            <h2>摘要</h2>
+            <p>在Linux下（本文以Ubuntu 18.04 LTS为例）安装一个快速简单且免费的BitTorrent客户端Transmission，并启用WebUI</p>
+            <nav class="toc">
+            <h2>目录</h2>
+            <div class="toc">
+<ul>
+<li><a href="#1-transmission-daemon">1. 安装 transmission-daemon</a></li>
+<li><a href="#2-settingsjson">2. 修改 settings.json</a></li>
+<li><a href="#3">3. 在配置并启动后你可能会遇到的报错</a><ul>
+<li><a href="#udp-failed-to-set-receive-buffer-error">“UDP Failed to set receive buffer ... ”error</a></li>
+</ul>
+</li>
+</ul>
+</div>
+            </nav>
+        
+<blockquote>
+<p>注意：作为root用户进行工作或在对应命令前加上sudo</p>
+</blockquote>
+<h2 id="1-transmission-daemon">1. 安装 transmission-daemon</h2>
+<p>只需要在你的终端输入以下命令即可完成安装:</p>
+<div class="highlight"><pre><span></span><code>apt install transmission-daemon -y
+</code></pre></div>
+<h2 id="2-settingsjson">2. 修改 <code>settings.json</code></h2>
+<blockquote>
+<p>首先你需要先停止 <code>transmission-daemon</code> 然后再修改配置文件</p>
+<p>配置文件 <code>settings.json</code> 通常会在目录 <code>/etc/transmission/</code>之下</p>
+</blockquote>
+<p>在你的终端中输入以下两行命令来停止<code>transmission-daemon</code>并打开配置文件 <code>settings.json</code></p>
+<div class="highlight"><pre><span></span><code>service transmission-daemon stop
+vim /etc/transmission-daemon/settings.json
+</code></pre></div>
+<p>这里提供了一个配置文件 <code>settings.json</code>可行的示例</p>
+<blockquote>
+<p>其中，备注为<code>check</code>的行需要你进行检查是否与示例一致，备注为<code>modify</code>的行你可以根据自己的情况自行修改：</p>
+</blockquote>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+    <span class="nt">"alt-speed-down"</span><span class="p">:</span> <span class="mi">50</span><span class="p">,</span>
+    <span class="nt">"alt-speed-enabled"</span><span class="p">:</span> <span class="kc">false</span><span class="p">,</span>
+    <span class="nt">"alt-speed-time-begin"</span><span class="p">:</span> <span class="mi">540</span><span class="p">,</span>
+    <span class="nt">"alt-speed-time-day"</span><span class="p">:</span> <span class="mi">127</span><span class="p">,</span>
+    <span class="nt">"alt-speed-time-enabled"</span><span class="p">:</span> <span class="kc">false</span><span class="p">,</span>
+    <span class="nt">"alt-speed-time-end"</span><span class="p">:</span> <span class="mi">1020</span><span class="p">,</span>
+    <span class="nt">"alt-speed-up"</span><span class="p">:</span> <span class="mi">50</span><span class="p">,</span>
+    <span class="nt">"bind-address-ipv4"</span><span class="p">:</span> <span class="s2">"0.0.0.0"</span><span class="p">,</span>  <span class="err">//check</span>
+    <span class="nt">"bind-address-ipv6"</span><span class="p">:</span> <span class="s2">"::"</span><span class="p">,</span> <span class="err">//check</span>
+    <span class="nt">"blocklist-enabled"</span><span class="p">:</span> <span class="kc">false</span><span class="p">,</span><span class="err">//check</span>
+    <span class="nt">"blocklist-url"</span><span class="p">:</span> <span class="s2">"http://www.example.com/blocklist"</span><span class="p">,</span>
+    <span class="nt">"cache-size-mb"</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
+    <span class="nt">"dht-enabled"</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+    <span class="nt">"download-dir"</span><span class="p">:</span> <span class="s2">"/var/lib/transmission-daemon/downloads"</span><span class="p">,</span> <span class="err">//can</span> <span class="err">modify</span> <span class="err">to</span> <span class="err">where</span> <span class="err">you</span> <span class="err">want</span> <span class="err">to</span> <span class="err">put</span> <span class="err">your</span> <span class="err">files</span>
+    <span class="nt">"download-queue-enabled"</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+    <span class="nt">"download-queue-size"</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span>
+    <span class="nt">"encryption"</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="nt">"idle-seeding-limit"</span><span class="p">:</span> <span class="mi">30</span><span class="p">,</span>
+    <span class="nt">"idle-seeding-limit-enabled"</span><span class="p">:</span> <span class="kc">false</span><span class="p">,</span>
+    <span class="nt">"incomplete-dir"</span><span class="p">:</span> <span class="s2">"/var/lib/transmission-daemon/Downloads"</span><span class="p">,</span> <span class="err">//can</span> <span class="err">modify</span> <span class="err">to</span> <span class="err">where</span> <span class="err">you</span> <span class="err">want</span> <span class="err">to</span> <span class="err">put</span> <span class="err">your</span> <span class="err">files</span>
+    <span class="nt">"incomplete-dir-enabled"</span><span class="p">:</span> <span class="kc">false</span><span class="p">,</span>
+    <span class="nt">"lpd-enabled"</span><span class="p">:</span> <span class="kc">false</span><span class="p">,</span>
+    <span class="nt">"message-level"</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="nt">"peer-congestion-algorithm"</span><span class="p">:</span> <span class="s2">""</span><span class="p">,</span>
+    <span class="nt">"peer-id-ttl-hours"</span><span class="p">:</span> <span class="mi">6</span><span class="p">,</span>
+    <span class="nt">"peer-limit-global"</span><span class="p">:</span> <span class="mi">200</span><span class="p">,</span>
+    <span class="nt">"peer-limit-per-torrent"</span><span class="p">:</span> <span class="mi">50</span><span class="p">,</span>
+    <span class="nt">"peer-port"</span><span class="p">:</span> <span class="mi">51413</span><span class="p">,</span>
+    <span class="nt">"peer-port-random-high"</span><span class="p">:</span> <span class="mi">65535</span><span class="p">,</span>
+    <span class="nt">"peer-port-random-low"</span><span class="p">:</span> <span class="mi">49152</span><span class="p">,</span>
+    <span class="nt">"peer-port-random-on-start"</span><span class="p">:</span> <span class="kc">false</span><span class="p">,</span>
+    <span class="nt">"peer-socket-tos"</span><span class="p">:</span> <span class="s2">"default"</span><span class="p">,</span>
+    <span class="nt">"pex-enabled"</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+    <span class="nt">"port-forwarding-enabled"</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+    <span class="nt">"preallocation"</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="nt">"prefetch-enabled"</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="nt">"queue-stalled-enabled"</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+    <span class="nt">"queue-stalled-minutes"</span><span class="p">:</span> <span class="mi">30</span><span class="p">,</span>
+    <span class="nt">"ratio-limit"</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+    <span class="nt">"ratio-limit-enabled"</span><span class="p">:</span> <span class="kc">false</span><span class="p">,</span>
+    <span class="nt">"rename-partial-files"</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+    <span class="nt">"rpc-authentication-required"</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span><span class="err">//check</span>
+    <span class="nt">"rpc-bind-address"</span><span class="p">:</span> <span class="s2">"0.0.0.0"</span><span class="p">,</span> <span class="err">//check</span>
+    <span class="nt">"rpc-enabled"</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span> <span class="err">//check</span>
+    <span class="nt">"rpc-host-whitelist"</span><span class="p">:</span> <span class="s2">""</span><span class="p">,</span><span class="err">//check</span>
+    <span class="nt">"rpc-host-whitelist-enabled"</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span><span class="err">//check</span>
+    <span class="nt">"rpc-password"</span><span class="p">:</span> <span class="s2">"passwd"</span><span class="p">,</span><span class="err">//change</span> <span class="err">to</span> <span class="err">your</span> <span class="err">password</span>
+    <span class="nt">"rpc-port"</span><span class="p">:</span> <span class="mi">9091</span><span class="p">,</span><span class="err">//port</span> <span class="err">to</span> <span class="err">visit</span> <span class="err">from</span> <span class="err">web</span>
+    <span class="nt">"rpc-url"</span><span class="p">:</span> <span class="s2">"/transmission/"</span><span class="p">,</span><span class="err">//can</span> <span class="err">modify</span>
+    <span class="nt">"rpc-username"</span><span class="p">:</span> <span class="s2">"transmission"</span><span class="p">,</span> <span class="err">//user</span>
+    <span class="nt">"rpc-whitelist"</span><span class="p">:</span> <span class="s2">"*.*.*.*"</span><span class="p">,</span><span class="err">//modify</span>
+    <span class="nt">"rpc-whitelist-enabled"</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span><span class="err">//check</span>
+    <span class="nt">"scrape-paused-torrents-enabled"</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+    <span class="nt">"script-torrent-done-enabled"</span><span class="p">:</span> <span class="kc">false</span><span class="p">,</span>
+    <span class="nt">"script-torrent-done-filename"</span><span class="p">:</span> <span class="s2">""</span><span class="p">,</span>
+    <span class="nt">"seed-queue-enabled"</span><span class="p">:</span> <span class="kc">false</span><span class="p">,</span>
+    <span class="nt">"seed-queue-size"</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span>
+    <span class="nt">"speed-limit-down"</span><span class="p">:</span> <span class="mi">100</span><span class="p">,</span>
+    <span class="nt">"speed-limit-down-enabled"</span><span class="p">:</span> <span class="kc">false</span><span class="p">,</span>
+    <span class="nt">"speed-limit-up"</span><span class="p">:</span> <span class="mi">100</span><span class="p">,</span>
+    <span class="nt">"speed-limit-up-enabled"</span><span class="p">:</span> <span class="kc">false</span><span class="p">,</span>
+    <span class="nt">"start-added-torrents"</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+    <span class="nt">"trash-original-torrent-files"</span><span class="p">:</span> <span class="kc">false</span><span class="p">,</span>
+    <span class="nt">"umask"</span><span class="p">:</span> <span class="mi">18</span><span class="p">,</span>
+    <span class="nt">"upload-slots-per-torrent"</span><span class="p">:</span> <span class="mi">14</span><span class="p">,</span>
+    <span class="nt">"utp-enabled"</span><span class="p">:</span> <span class="kc">true</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>完成修改后，保存并退出，然后在终端输入以下命令来启动<code>transmission-daemon</code>并检查其状态</p>
+<div class="highlight"><pre><span></span><code>service transmission-daemon start
+service transmission-daemon status
+</code></pre></div>
+<blockquote>
+<p>如果此时没有输出任何warning或者failure，那么说明配置已完成并且可以正常工作了</p>
+</blockquote>
+<p>然后你就可以访问以下地址<code>http://&lt;your ip address&gt;:9091</code>进入到<code>transmission-daemon</code>的WebUI界面进行管理</p>
+<h2 id="3">3. 在配置并启动后你可能会遇到的报错</h2>
+<h3 id="udp-failed-to-set-receive-buffer-error">“UDP Failed to set receive buffer ... ”error</h3>
+<p>解决该错误，只需要输入以下两行命令即可解决:</p>
+<div class="highlight"><pre><span></span><code>sysctl -w net.core.rmem_max<span class="o">=</span><span class="m">8388608</span>
+sysctl -w net.core.wmem_max<span class="o">=</span><span class="m">8388608</span>
+</code></pre></div>
+        <h2>Other Articles</h2>
+            <h3>Previous Article: 
+                <a href="https://blog.bobankh.com/blog/helloworld.html">
+                    HelloWorld
+                </a>
+            </h3>
+            <h3>Next Article: 
+                <a href="https://blog.bobankh.com/blog/lychee.html">
+                    Install Lychee under Ubuntu
+                </a>
+            </h3>
+
+
+    <div class="comments">
+        <div id="disqus_thread"></div>
+            <script type="text/javascript">
+                var disqus_shortname = 'blog-bobankh-com';
+                var disqus_identifier = 'blog/transmission.html';
+                var disqus_url = 'https://blog.bobankh.com/blog/transmission.html';
+                (function() {
+                    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+                    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+                })();
+            </script>
+        <noscript>Please enable JavaScript to view the comments.</noscript>
+    </div>
+        
+    </div>
+        <!-- /Content --> 
+
+        <!-- Footer -->
+        <div class="footer gradient-2">
+            <div class="container footer-container ">
+                <div class="row">
+                    <div class="col-xs-4 col-sm-3 col-md-3 col-lg-3">
+                        <div class="footer-title">Sitemap</div>
+                        <ul class="list-unstyled">
+                            <li><a href="https://blog.bobankh.com/archives.html">Archives</a></li>
+                            <li><a href="https://blog.bobankh.com/tags.html">Tags</a></li>
+                            <li><a href="https://blog.bobankh.com/authors.html">Authors</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-xs-4 col-sm-3 col-md-3 col-lg-3">
+                        <div class="footer-title">Social</div>
+                        <ul class="list-unstyled">
+                            <li><a href="https://bobankh.com" target="_blank">CV</a></li>
+                            <li><a href="https://github.com/BobAnkh" target="_blank">Github</a></li>
+                            <li><a href="bobankhshen@gmail.com" target="_blank">Email</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-xs-4 col-sm-3 col-md-3 col-lg-3">
+                        <div class="footer-title">Links</div>
+                        <ul class="list-unstyled">
+                            <li><a href="https://getpelican.com/" target="_blank">Pelican</a></li>
+                            <li><a href="https://python.org/" target="_blank">Python.org</a></li>
+                            <li><a href="https://jinja.pocoo.org/" target="_blank">Jinja2</a></li>
+                        </ul>
+                    </div> 
+                    <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3">
+                        <p class="pull-right text-right">
+                            <small><em>Proudly powered by <a href="https://docs.getpelican.com/" target="_blank">pelican</a></em></small><br/>
+                            <small><em>Theme powered by <a href="https://github.com/molivier" target="_blank">molivier</a></em></small><br/>
+                            <small>&copy; BobAnkh 2020</small>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /Footer -->
+    </body>
+</html>

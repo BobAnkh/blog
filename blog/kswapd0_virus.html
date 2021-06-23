@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="description" content="写下这篇博客的原因是实验室的服务器在安装docker之后不幸感染上了挖矿病毒，便将发现与清除的方法记录于此，如有错漏，恳请指正 起因与状况 因为实验需要，近期在实验室的服务器上使用tke搭建k8s平台，在此过程中，k8s官方要求将防火墙关闭。 而完成搭建之后，发现有一个kswapd0程序占用了比较高的cpu使用率。...">
+        <meta name="keywords" content="Linux, Server, Ubuntu, Virus">
+        <link rel="icon" href="https://cdn.jsdelivr.net/gh/BobAnkh/blog/favicon.ico">
+
+        <title>kswapd0挖矿病毒的发现与清除 - BobAnkh's Blog</title>
+
+        <!-- Stylesheets -->
+        <!--         <link href="https://blog.bobankh.com/theme/css/all.min.css" rel="stylesheet">
+ -->
+        <link href="https://cdn.jsdelivr.net/gh/BobAnkh/blog/theme/css/all.min.css" rel="stylesheet">
+        <!-- /Stylesheets -->
+
+        <!-- RSS Feeds -->
+        <!-- /RSS Feeds -->
+
+        <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+        <!--[if lt IE 9]>
+          <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+          <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+        <![endif]-->
+
+
+
+    </head>
+
+    <body>
+
+        <!-- Header -->
+    <div class="header-container" style="background: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), url('https://blog.bobankh.com/images/background.jpg'); background-position: center; ">
+
+            <!-- Static navbar -->
+            <div class="container">
+                <div class="header-nav">
+                    <div class="header-logo">
+                        <a class="pull-left" href="https://blog.bobankh.com/"><img class="mr20" src="https://cdn.jsdelivr.net/gh/BobAnkh/blog/images/logo.png" alt="logo">BobAnkh's Blog</a>
+                    </div>
+                    <div class="nav pull-right">
+                                <a href="https://blog.bobankh.com/">Homepage</a>
+                                <a href="https://blog.bobankh.com/categories.html">Categories</a>
+                                <a href="https://blog.bobankh.com/archives.html">Archives</a>
+                                <a href="https://github.com/BobAnkh">Github</a>
+                                <a href="https://bobankh.com">CV</a>
+                    </div>
+                </div>
+            </div>
+            <!-- /Static navbar -->
+
+            <!-- Header -->
+    <!-- Header -->
+    <div class="container header-wrapper">
+        <div class="row">
+              <div class="col-lg-12">
+                  <div class="header-content">
+                      <h1 class="header-title">kswapd0挖矿病毒的发现与清除</h1>
+                      <p class="header-date">Written By <a href="https://blog.bobankh.com/author/bobankh.html">BobAnkh</a>, 2020-07-10(Fri), in Category <a href="https://blog.bobankh.com/category/linux.html">Linux</a></p>
+                      <div class="header-underline"></div>
+                      <div class="clearfix"></div>
+                      <p class="pull-right header-tags">
+                          <span class="glyphicon glyphicon-tags mr5" aria-hidden="true"></span>
+<a href="https://blog.bobankh.com/tag/linux.html">Linux</a>, <a href="https://blog.bobankh.com/tag/server.html">Server</a>, <a href="https://blog.bobankh.com/tag/ubuntu.html">Ubuntu</a>, <a href="https://blog.bobankh.com/tag/virus.html">Virus</a>                      </p>
+                  </div>
+              </div>
+        </div>
+    </div>
+    <!-- /Header -->
+            <!-- /Header -->
+
+        </div>
+        <!-- /Header -->
+
+
+        <!-- Content -->
+
+    <div class="container content">
+            <h2>摘要</h2>
+            <p>对于近期由于安装docker时趁虚而入的伪装成kswapd0进程的挖矿病毒的发现与清除</p>
+            <nav class="toc">
+            <h2>目录</h2>
+            <div class="toc">
+<ul>
+<li><a href="#_1">起因与状况</a></li>
+<li><a href="#_2">探查根源</a></li>
+<li><a href="#_3">病毒清除</a></li>
+</ul>
+</div>
+            </nav>
+        
+<blockquote>
+<p>写下这篇博客的原因是实验室的服务器在安装docker之后不幸感染上了挖矿病毒，便将发现与清除的方法记录于此，如有错漏，恳请指正</p>
+</blockquote>
+<h2 id="_1">起因与状况</h2>
+<p>因为实验需要，近期在实验室的服务器上使用tke搭建k8s平台，在此过程中，k8s官方要求将防火墙关闭。</p>
+<p>而完成搭建之后，发现有一个kswapd0程序占用了比较高的cpu使用率。</p>
+<p>一开始以为或许是安装进程的原因，但后续卸载了installer并清除了tke残余内容，发现该进程仍然存在，于是推测该进程应当存在问题。</p>
+<p>该进程可以直接kill掉，但是reboot之后又会重新出现，状况如下：</p>
+<p><img alt="htop" src="https://cdn.jsdelivr.net/gh/BobAnkh/blog/figures/kswapd0/a1181b1edc2ab.png"/></p>
+<h2 id="_2">探查根源</h2>
+<p>根据上面的进程信息，可以看到该进程执行的用户是vagrant，这就让人感到奇怪了，于是用命令<code>netstat -antlp</code>查看了应用连接：</p>
+<p><img alt="netstat" src="https://cdn.jsdelivr.net/gh/BobAnkh/blog/figures/kswapd0/d07094470a348.png"/></p>
+<p>发现存在两个连接是通向2个奇怪的ip地址的，其中之一就是kswapd0，还有一个是rsync（是病毒缓存文件）：</p>
+<p>检查这两个ip地址发现都是荷兰的ip，而且是同一个段的，查询发现也是知名的挖矿ip：</p>
+<p><img alt="45.9.148.125" src="https://cdn.jsdelivr.net/gh/BobAnkh/blog/figures/kswapd0/7b54ce07f625f.png"/> <img alt="45.9.148.99" src="https://cdn.jsdelivr.net/gh/BobAnkh/blog/figures/kswapd0/b69342dde711a.png"/></p>
+<p>于是便查看这个程序的根源出自哪里，使用命令<code>ls -l /proc/2971/exe</code>探查：</p>
+<p>发现它指向<code>/home/vagrant/</code>下的一个<code>.configrc/a/kswapd0</code>，进入<code>.configrc/</code>文件夹探查发现，整个文件夹应该都是有问题的</p>
+<p>到临时目录<code>/tmp</code>中，使用命令<code>ls -sa | grep vagrant</code>探查，也可以看到与vagrant用户相关的奇怪的文件</p>
+<p>此时，还需要检查出现问题用户的crontab，看是否被写入了定时计划，否则可能定时或者reboot之后又会启动病毒，使用命令<code>crontab -l -u vagrant</code>检查：</p>
+<p><img alt="crontab" src="https://cdn.jsdelivr.net/gh/BobAnkh/blog/figures/kswapd0/41d832cfb6a41.png"/></p>
+<p>另外，对于该用户，还需要检查其<code>.ssh</code>目录下<code>authorized_keys</code>是否被配置了后门的ssh的key，本次发现该公钥如下，也是一个知名公钥了：</p>
+<div class="highlight"><pre><span></span><code><span class="err">AAAAB3NzaC1yc2EAAAABJQAAAQEArDp4cun2lhr4KUhBGE7VvAcwdli2a8dbnrTOrbMz1+5O73fcBOx8NVbUT0bUanUV9tJ2/9p7+vD0EpZ3Tz/+0kX34uAx1RV/75GVOmNx+9EuWOnvNoaJe0QXxziIg9eLBHpgLMuakb5+BgTFB+rKJAw9u9FSTDengvS8hX1kNFS4Mjux0hJOK8rvcEmPecjdySYMb66nylAKGwCEE6WEQHmd1mUPgHwGQ0hWCwsQk13yCGPK5w6hYp5zYkFnvlC8hGmd4Ww+u97k6pfTGTUbJk14ujvcD9iUKQTTWYYjIIu5PmUux5bsZ0R4WFwdIe6+i6rBLAsPKgAySVKPRK+oRw==</span>
+</code></pre></div>
+<h2 id="_3">病毒清除</h2>
+<p>首先，先清理出现问题用户的crontab，使用命令<code>crontab -e -u vagrant</code>后，将内容全部清除</p>
+<p>接着，用<code>kill -9 2971</code>命令将<strong>kswapd0</strong>进程杀掉，同时，用命令<code>kill -9 2339</code>将<strong>rsync</strong>进程也杀掉</p>
+<p>随后删除<code>/home/vagrant/</code>目录下<code>.configrc/</code>和<code>/tmp/</code>目录下<code>.X25-unix/dota3.tar.gz</code>和<code>.X25-unix/.rsync/*</code></p>
+<p>至此，清除工作就完成了，后续可以观察病毒是否会再生</p>
+<p>另外，建议除特殊要求外，时刻将防火墙开启，并且，如有需要，可以自己编写脚本检查各用户是否存在奇怪的crontab定时计划</p>
+<p>这里给出一个可行脚本：</p>
+<div class="highlight"><pre><span></span><code>cat /etc/passwd <span class="p">|</span> awk -F<span class="s2">":"</span> <span class="s1">'{print $1}'</span> <span class="p">|</span> <span class="k">while</span> <span class="nb">read</span> -r line
+<span class="k">do</span>
+        <span class="nb">echo</span> <span class="nv">$line</span>
+        crontab -l -u <span class="nv">$line</span>
+<span class="k">done</span>
+</code></pre></div>
+        <h2>Other Articles</h2>
+            <h3>Previous Article: 
+                <a href="https://blog.bobankh.com/blog/typora.html">
+                    Typora 使用指南
+                </a>
+            </h3>
+            <h3>Next Article: 
+                <a href="https://blog.bobankh.com/blog/salsify_zh.html">
+                    Salsify: 通过视频编解码器和传输协议之间更紧密的集成来实现低延迟网络视频
+                </a>
+            </h3>
+
+
+    <div class="comments">
+        <div id="disqus_thread"></div>
+            <script type="text/javascript">
+                var disqus_shortname = 'blog-bobankh-com';
+                var disqus_identifier = 'blog/kswapd0_virus.html';
+                var disqus_url = 'https://blog.bobankh.com/blog/kswapd0_virus.html';
+                (function() {
+                    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+                    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+                })();
+            </script>
+        <noscript>Please enable JavaScript to view the comments.</noscript>
+    </div>
+        
+    </div>
+        <!-- /Content --> 
+
+        <!-- Footer -->
+        <div class="footer gradient-2">
+            <div class="container footer-container ">
+                <div class="row">
+                    <div class="col-xs-4 col-sm-3 col-md-3 col-lg-3">
+                        <div class="footer-title">Sitemap</div>
+                        <ul class="list-unstyled">
+                            <li><a href="https://blog.bobankh.com/archives.html">Archives</a></li>
+                            <li><a href="https://blog.bobankh.com/tags.html">Tags</a></li>
+                            <li><a href="https://blog.bobankh.com/authors.html">Authors</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-xs-4 col-sm-3 col-md-3 col-lg-3">
+                        <div class="footer-title">Social</div>
+                        <ul class="list-unstyled">
+                            <li><a href="https://bobankh.com" target="_blank">CV</a></li>
+                            <li><a href="https://github.com/BobAnkh" target="_blank">Github</a></li>
+                            <li><a href="bobankhshen@gmail.com" target="_blank">Email</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-xs-4 col-sm-3 col-md-3 col-lg-3">
+                        <div class="footer-title">Links</div>
+                        <ul class="list-unstyled">
+                            <li><a href="https://getpelican.com/" target="_blank">Pelican</a></li>
+                            <li><a href="https://python.org/" target="_blank">Python.org</a></li>
+                            <li><a href="https://jinja.pocoo.org/" target="_blank">Jinja2</a></li>
+                        </ul>
+                    </div> 
+                    <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3">
+                        <p class="pull-right text-right">
+                            <small><em>Proudly powered by <a href="https://docs.getpelican.com/" target="_blank">pelican</a></em></small><br/>
+                            <small><em>Theme powered by <a href="https://github.com/molivier" target="_blank">molivier</a></em></small><br/>
+                            <small>&copy; BobAnkh 2020</small>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /Footer -->
+    </body>
+</html>

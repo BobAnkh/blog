@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="description" content="0 概述 Rust是一种使每个人都可以构建可靠、高效软件的编程语言。它是一种系统级编程语言，注重高性能、可靠性和生产力，支持结构化编程、函数式编程、面向对象编程等多种编程范式。 Rust是编译型语言，没有运行时(Runtime)和垃圾回收(Garbage Collector,...">
+        <meta name="keywords" content="Language, Rust">
+        <link rel="icon" href="https://cdn.jsdelivr.net/gh/BobAnkh/blog/favicon.ico">
+
+        <title>编程语言Rust介绍与简单入门 - BobAnkh's Blog</title>
+
+        <!-- Stylesheets -->
+        <!--         <link href="https://blog.bobankh.com/theme/css/all.min.css" rel="stylesheet">
+ -->
+        <link href="https://cdn.jsdelivr.net/gh/BobAnkh/blog/theme/css/all.min.css" rel="stylesheet">
+        <!-- /Stylesheets -->
+
+        <!-- RSS Feeds -->
+        <!-- /RSS Feeds -->
+
+        <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+        <!--[if lt IE 9]>
+          <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+          <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+        <![endif]-->
+
+
+
+    </head>
+
+    <body>
+
+        <!-- Header -->
+    <div class="header-container" style="background: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), url('https://blog.bobankh.com/images/background.jpg'); background-position: center; ">
+
+            <!-- Static navbar -->
+            <div class="container">
+                <div class="header-nav">
+                    <div class="header-logo">
+                        <a class="pull-left" href="https://blog.bobankh.com/"><img class="mr20" src="https://cdn.jsdelivr.net/gh/BobAnkh/blog/images/logo.png" alt="logo">BobAnkh's Blog</a>
+                    </div>
+                    <div class="nav pull-right">
+                                <a href="https://blog.bobankh.com/">Homepage</a>
+                                <a href="https://blog.bobankh.com/categories.html">Categories</a>
+                                <a href="https://blog.bobankh.com/archives.html">Archives</a>
+                                <a href="https://github.com/BobAnkh">Github</a>
+                                <a href="https://bobankh.com">CV</a>
+                    </div>
+                </div>
+            </div>
+            <!-- /Static navbar -->
+
+            <!-- Header -->
+    <!-- Header -->
+    <div class="container header-wrapper">
+        <div class="row">
+              <div class="col-lg-12">
+                  <div class="header-content">
+                      <h1 class="header-title">编程语言Rust介绍与简单入门</h1>
+                      <p class="header-date">Written By <a href="https://blog.bobankh.com/author/bobankh.html">BobAnkh</a>, 2021-04-06(Tue), in Category <a href="https://blog.bobankh.com/category/language.html">Language</a></p>
+                      <div class="header-underline"></div>
+                      <div class="clearfix"></div>
+                      <p class="pull-right header-tags">
+                          <span class="glyphicon glyphicon-tags mr5" aria-hidden="true"></span>
+<a href="https://blog.bobankh.com/tag/language.html">Language</a>, <a href="https://blog.bobankh.com/tag/rust.html">Rust</a>                      </p>
+                  </div>
+              </div>
+        </div>
+    </div>
+    <!-- /Header -->
+            <!-- /Header -->
+
+        </div>
+        <!-- /Header -->
+
+
+        <!-- Content -->
+
+    <div class="container content">
+            <h2>摘要</h2>
+            <p>本篇文章主要介绍Rust及其安装和开发环境的配置，加上基本构建过程和简单语法。相对高级的语法诸如所有权、生命周期、Trait、闭包等将留到以后介绍。</p>
+            <nav class="toc">
+            <h2>目录</h2>
+            <div class="toc">
+<ul>
+<li><a href="#0">0 概述</a></li>
+<li><a href="#1">1 特点</a><ul>
+<li><a href="#11">1.1 零成本抽象</a></li>
+<li><a href="#12">1.2 所有权模型与内存安全</a></li>
+<li><a href="#13-trait">1.3 特征(trait)</a></li>
+<li><a href="#14">1.4 基于返回值的错误处理</a></li>
+<li><a href="#15">1.5 迭代器与闭包</a></li>
+<li><a href="#16-asyncawaitfuture">1.6 async/await与Future</a></li>
+<li><a href="#17-unsafe">1.7 Unsafe</a></li>
+<li><a href="#18">1.8 宏</a></li>
+</ul>
+</li>
+<li><a href="#2-rust">2 安装Rust</a></li>
+<li><a href="#3-rust">3 配置Rust开发环境</a></li>
+<li><a href="#4-rust">4 构建Rust的基本流程</a><ul>
+<li><a href="#41">4.1 创建并初始化新项目</a></li>
+<li><a href="#42">4.2 编译运行项目</a></li>
+<li><a href="#43">4.3 实用工具</a></li>
+</ul>
+</li>
+<li><a href="#5">5. 简单语法介绍</a><ul>
+<li><a href="#51">5.1 定义变量</a></li>
+<li><a href="#52">5.2 基本变量类型</a></li>
+<li><a href="#53">5.3 函数</a></li>
+<li><a href="#54">5.4 控制流</a></li>
+</ul>
+</li>
+<li><a href="#6">6 结语</a></li>
+</ul>
+</div>
+            </nav>
+        
+<h2 id="0">0 概述</h2>
+<p><strong>Rust</strong>是一种使每个人都可以构建可靠、高效软件的编程语言。它是一种<strong>系统级编程语言</strong>，注重<strong>高性能</strong>、<strong>可靠性</strong>和<strong>生产力</strong>，支持结构化编程、函数式编程、面向对象编程等多种编程范式。</p>
+<p>Rust是<strong>编译型语言</strong>，没有运行时(Runtime)和垃圾回收(Garbage Collector, GC)。Rust使用所有权机制来实现自动内存管理，并以此来保证内存安全。Rust是<strong>开源项目</strong>，目前托管在Github上，Rust官方软件包管理器为<strong>Cargo</strong>。</p>
+<p><strong>高性能</strong>：Rust 速度惊人且内存利用率极高。由于没有运行时和垃圾回收，它能够胜任对性能要求特别高的服务，可以在嵌入式设备上运行，还能轻松和其他语言集成。</p>
+<p><strong>可靠性</strong>：Rust 丰富的类型系统和所有权模型保证了内存安全和线程安全，让您在编译期就能够消除各种各样的错误。</p>
+<p><strong>生产力</strong>：Rust 拥有出色的文档、友好的编译器和清晰的错误提示信息， 还集成了一流的工具——包管理器和构建工具， 智能地自动补全和类型检验的多编辑器支持， 以及自动格式化代码等等。</p>
+<p>全世界已有数百家公司在生产环境中使用 Rust，以达到快速、跨平台、低资源占用的目的。很多著名且受欢迎的软件，例如 <a href="https://hacks.mozilla.org/2017/08/inside-a-super-fast-css-engine-quantum-css-aka-stylo/">Firefox</a>、 <a href="https://blogs.dropbox.com/tech/2016/06/lossless-compression-with-brotli/">Dropbox</a> 和 <a href="https://blog.cloudflare.com/cloudflare-workers-as-a-serverless-rust-platform/">Cloudflare</a> 都在使用 Rust。</p>
+<h2 id="1">1 特点</h2>
+<h3 id="11">1.1 零成本抽象</h3>
+<p>零成本抽象是Rust实现高性能的核心。</p>
+<h3 id="12">1.2 所有权模型与内存安全</h3>
+<p>Rust通过强大的类型系统和所有权模型来保证内存安全与线程安全，在编译时消除很多可能存在的错误。</p>
+<p>使用Rust语言编程不需要手动分配(malloc)释放(free)内存和资源。Rust通过所有权系统来判断资源分配和释放的时机，在资源不再使用自动调用析构函数并释放资源。所有权系统是Rust与其他语言最不同的一点，这也是Rust学习曲线较为陡峭的原因之一。</p>
+<h3 id="13-trait">1.3 特征(trait)</h3>
+<p>Rust使用特征(trait)机制来实现抽象和代码复用，而非使用其他编程语言中常见的类(Class)。</p>
+<p>特征(trait)的概念接近于其他编程语言的接口概念，trait可以包含方法声明和默认实现，但不能包含成员变量。</p>
+<h3 id="14">1.4 基于返回值的错误处理</h3>
+<p>Rust语言使用返回值来进行错误处理，Rust中可能产生错误或空的函数的返回值一般为<code>Result&lt;T, E&gt;</code>或<code>Option&lt;T&gt;</code>类型，开发者必须在代码中显式的处理每一种情况，以此保证错误得到处理。</p>
+<h3 id="15">1.5 迭代器与闭包</h3>
+<p>Rust支持多种类型的迭代器、迭代器适配器和消费器。</p>
+<p>Rust支持非装箱(Unboxed)闭包。</p>
+<h3 id="16-asyncawaitfuture">1.6 async/await与Future</h3>
+<p>Async/await是Rust提供的异步编程方式。</p>
+<p>Rust支持异步函数(async function)、异步闭包(async closure)、异步代码块(async block)和在async标记的块中使用.await后置关键词。</p>
+<p>Rust只提供了async-await语法和Future特征等必要功能，没有提供默认的事件循环机制/异步运行时(asynchronous run-time)。</p>
+<h3 id="17-unsafe">1.7 Unsafe</h3>
+<p>强大的类型系统和所有权模型保证了Rust的安全性，但也限制了Rust实现部分功能的能力，比如外部函数接口(FFI)等。对此，Rust提供了unsafe关键词，在unsafe标记的块中，部分操作不会提供安全检查。</p>
+<h3 id="18">1.8 宏</h3>
+<p>Rust支持声明宏、过程宏、编译器插件等机制，显著提升了Rust的表达能力和易用性。</p>
+<h2 id="2-rust">2 安装Rust</h2>
+<blockquote>
+<p>推荐采用<a href="https://www.rust-lang.org/tools/install">官网</a>上的方式进行安装rustup</p>
+</blockquote>
+<p><strong>windows</strong>直接下载官网提供的<code>rustup-init.exe</code>后运行并根据提示安装。</p>
+<p><strong>Unix</strong>系统可以直接使用<code>curl</code>以如下命令安装：<code>curl https://sh.rustup.rs -sSf | sh</code>，或在官方<a href="https://forge.rust-lang.org/infra/other-installation-methods.html">Forge</a>中下载对应的脚本自行安装。</p>
+<p>安装完成后，可以运行如下命令进行检测：<code>rustc -V</code>。该命令将会输出rustc的版本。同样可以运行如下命令来检测包管理工具Cargo是否正确安装：<code>cargo -V</code>。该命令将会输出cargo的版本。</p>
+<p>如果仅仅只是想体验这门语言，也可以直接使用官方的在线 <a href="https://play.rust-lang.org/">playground</a> 进行体验。</p>
+<h2 id="3-rust">3 配置Rust开发环境</h2>
+<p>推荐使用<code>Visual Studio Code</code>进行开发，这方面的插件和工具适配的比较好。推荐安装如下插件：</p>
+<ul>
+<li><code>bungcip.better-toml</code> 用来高亮 <code>Rust</code> 的 <code>Toml</code> 格式配置文件</li>
+<li><code>vadimcn.vscode-lldb</code> 用来调试</li>
+<li><code>matklad.rust-analyzer</code> 或 <code>rust-lang.rust</code> 提供语义高亮、代码补全、定义跳转等等一系列功能。两者均非常优秀，选其一使用即可，个人更为推荐使用前者。</li>
+</ul>
+<h2 id="4-rust">4 构建Rust的基本流程</h2>
+<h3 id="41">4.1 创建并初始化新项目</h3>
+<p>常规而言，推荐采用<strong>Cargo</strong>以命令行方式构建<strong>Rust</strong>项目。</p>
+<p>在一个你希望构建Rust项目的路径下，以命令行方式运行如下指令：<code>cargo new &lt;project&gt;</code>，此处<code>&lt;project&gt;</code>替换为你的项目名称，如：<code>cargo new hello-world</code>。</p>
+<p>这样会在当前目录下新建一个文件夹名为<code>hello-world</code>并完成其内部的一些初始化工作。</p>
+<p>同样，也可以自己手动新建一个文件夹，在文件夹内运行<code>cargo init</code>命令来完成初始化过程。</p>
+<p>初始化过程会构建如下结构：</p>
+<div class="highlight"><pre><span></span><code><span class="go">.</span>
+<span class="go">├── Cargo.toml</span>
+<span class="go">├── .git</span>
+<span class="go">│   └── ...</span>
+<span class="go">├── .gitignore</span>
+<span class="go">└── src</span>
+<span class="go">    └── main.rs</span>
+</code></pre></div>
+<p><code>src</code>文件夹下存放的即是该Rust项目的源码，可以看到此时已经生成了一个<code>main.rs</code>文件。此外，Cargo会将该项目置于git管理下，同时会在<code>.gitignore</code>中加入忽略<code>/target</code>目录（当然如果本项目已经存在<code>.git</code>文件夹，即已经被git所管理，Cargo只会修改<code>.gitignore</code>文件）。该目录是默认情况下，Rust编译之后产物所在的文件夹。<code>Cargo.toml</code>是该项目的配置文件，其内包含的内容如下：</p>
+<div class="highlight"><pre><span></span><code><span class="k">[package]</span>
+<span class="n">name</span> <span class="o">=</span> <span class="s">"hello-world"</span>
+<span class="n">version</span> <span class="o">=</span> <span class="s">"0.1.0"</span>
+<span class="n">authors</span> <span class="o">=</span> <span class="k">["author &lt;author@email.com&gt;"]</span>
+<span class="n">edition</span> <span class="o">=</span> <span class="s">"2018"</span>
+
+<span class="c1"># See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html</span>
+
+<span class="k">[dependencies]</span>
+</code></pre></div>
+<p>这里记录了项目的名称、版本、作者、使用的 <code>Rust</code> 版本和依赖。</p>
+<p><code>main.rs</code>中初始化的内容为：</p>
+<div class="highlight"><pre><span></span><code><span class="k">fn</span> <span class="nf">main</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">   </span><span class="n">println</span><span class="o">!</span><span class="p">(</span><span class="s">"Hello, world!"</span><span class="p">);</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
+</code></pre></div>
+<p>这里是一个main函数，是直接调用<code>main.rs</code>时的程序入口，<code>fn</code>是定义函数的关键字，其内使用了一个宏(Macro)<code>println!</code>，用于打印内容并换行。关于宏的内容属于Rust的高级特征，在本文中暂且略去不表。此处是用于输出<code>"Hello, world!"</code>到终端。</p>
+<h3 id="42">4.2 编译运行项目</h3>
+<p>我们可以使用<code>cargo run</code>命令来编译该文件并运行：</p>
+<div class="highlight"><pre><span></span><code><span class="gp">$</span> cargo run
+<span class="go">   Compiling hello-world v0.1.0 (/home/shenyx/hello-world)</span>
+<span class="go">    Finished dev [unoptimized + debuginfo] target(s) in 1.04s</span>
+<span class="go">     Running `target/debug/hello-world`</span>
+<span class="go">Hello, world!</span>
+</code></pre></div>
+<p>也可以使用<code>cargo build --release</code>将代码编译为优化后的二进制可执行文件（只编译而并不会运行），可以进入到<code>target/build/release</code>目录下（如果不加<code>--release</code>参数则也可在<code>target/build/debug</code>目录下找到），运行可执行文件：</p>
+<div class="highlight"><pre><span></span><code><span class="gp">$</span> ./hello-world
+<span class="go">Hello, world!</span>
+</code></pre></div>
+<h3 id="43">4.3 实用工具</h3>
+<ol>
+<li>
+<p><strong>rustfmt</strong></p>
+<p>在开发过程中，可以使用<code>rustfmt</code>根据社区代码风格自动格式化代码。安装<code>rustfmt</code>：</p>
+<p><code>shell
+rustup component add rustfmt</code></p>
+<p>为了格式化整个Cargo项目：</p>
+<p><code>shell
+cargo fmt</code></p>
+</li>
+<li>
+<p><strong>rustfix</strong></p>
+<p>在开发过程中，可以使用<code>rustfix</code>工具，以命令<code>cargo fix</code>使用其来自动采纳编译器警告中给出的修改建议。</p>
+</li>
+<li>
+<p><strong>clippy</strong></p>
+<p><code>clippy</code> 工具是一系列 lint 的集合，用于捕捉常见错误和改进 Rust 代码。安装<code>clippy</code>：</p>
+<p><code>shell
+rustup component add clippy</code></p>
+<p>对于任何Cargo项目可以运行其lint：</p>
+<p><code>shell
+cargo clippy</code></p>
+</li>
+</ol>
+<blockquote>
+<p>事实上，cargo还有很多使用，例如<code>cargo test</code>可以运行代码内定义的测试等，更多细节建议参考官方指导书 <a href="https://doc.rust-lang.org/cargo/">The Cargo Book</a>，此处不做过多赘述</p>
+</blockquote>
+<h2 id="5">5. 简单语法介绍</h2>
+<blockquote>
+<p>Rust语言中的注释为使用<code>//</code>，后跟注释内容，多行注释需在每行前均加上<code>//</code></p>
+<p>Rust中还有文档注释，文档注释使用三斜杠 <code>///</code> 而不是两斜杆以支持 Markdown 注解来格式化文本。</p>
+</blockquote>
+<h3 id="51">5.1 定义变量</h3>
+<p>Rust采用<code>let name: type = value;</code>的形式定义变量，例如<code>let a: i32 = 1;</code>就定义了一个i32类型（32位有符号整型）的变量a，并赋值为1。</p>
+<p>Rust的变量默认是不可变的，如果想要修改变量的值，需要在定义时加上<code>mut</code>，即例如：</p>
+<div class="highlight"><pre><span></span><code><span class="kd">let</span><span class="w"> </span><span class="k">mut</span><span class="w"> </span><span class="n">b</span>: <span class="kt">u32</span> <span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span><span class="w"></span>
+<span class="n">println</span><span class="o">!</span><span class="p">(</span><span class="s">"b = {}"</span><span class="p">,</span><span class="w"> </span><span class="n">b</span><span class="p">);</span><span class="w"></span>
+<span class="n">b</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">3</span><span class="p">;</span><span class="w"></span>
+<span class="n">println</span><span class="o">!</span><span class="p">(</span><span class="s">"b = {}"</span><span class="p">,</span><span class="w"> </span><span class="n">b</span><span class="p">);</span><span class="w"></span>
+</code></pre></div>
+<p>就定义了一个u32类型（32位无符号整型）的变量b，并赋值为1，然后将其修改为3。</p>
+<p>常量使用<code>const</code>来定义，如<code>const MAX_POWER: u32 = 10000;</code>就定义了一个值为10000的u32类型的常量<code>MAX_POWER</code></p>
+<p>另外，Rust中，变量名一般采用<strong>snake_case</strong>，常量名一般采用<strong>SCREAMING_SNAKE_CASE</strong></p>
+<h3 id="52">5.2 基本变量类型</h3>
+<p>最主要的、常用的基本变量类型为：</p>
+<ul>
+<li>
+<p>布尔型，bool。</p>
+</li>
+<li>
+<p>字符类型，char。是32bit的，即4个字节，并代表了一个 Unicode 标量值，这意味着它可以比 ASCII 表示更多内容。在 Rust 中，拼音字母（Accented letters），中文、日文、韩文等字符，emoji）以及零长度的空白字符都是有效的 <code>char</code> 值。</p>
+</li>
+<li>
+<p>数字，整型包括：</p>
+<table>
+<thead>
+<tr>
+<th>长度</th>
+<th>有符号</th>
+<th>无符号</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>8-bit</td>
+<td><code>i8</code></td>
+<td><code>u8</code></td>
+</tr>
+<tr>
+<td>16-bit</td>
+<td><code>i16</code></td>
+<td><code>u16</code></td>
+</tr>
+<tr>
+<td>32-bit</td>
+<td><code>i32</code></td>
+<td><code>u32</code></td>
+</tr>
+<tr>
+<td>64-bit</td>
+<td><code>i64</code></td>
+<td><code>u64</code></td>
+</tr>
+<tr>
+<td>128-bit</td>
+<td><code>i128</code></td>
+<td><code>u128</code></td>
+</tr>
+<tr>
+<td>arch</td>
+<td><code>isize</code></td>
+<td><code>usize</code></td>
+</tr>
+</tbody>
+</table>
+<p>此处有符号表示值可以为负，而无符号则不行。<code>arch</code>表示长度随计算机架构而变。</p>
+<p>浮点型包括：</p>
+<table>
+<thead>
+<tr>
+<th>长度</th>
+<th>浮点数</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>32-bit</td>
+<td><code>f32</code></td>
+</tr>
+<tr>
+<td>64-bit</td>
+<td><code>f64</code></td>
+</tr>
+</tbody>
+</table>
+<p>Rust不一定要显式指定变量类型，编译器会推测变量类型，如整型默认为i32，浮点型默认为f64等。</p>
+<p>例如定义整型变量a，<code>let a = 1;</code>，a就会默认认为是i32类型的；定义浮点型变量b，<code>let b = 1.1;</code>，b就会默认认为是f64类型的。</p>
+</li>
+<li>
+<p>数组，[type; size]</p>
+<p>例如<code>let arr: [u32; 5] = [1, 2, 3, 4, 5];</code>就定义了一个长度为5，每个元素类型为u32的数组arr，并初始化了值。</p>
+<p><code>let arr1 = [3; 5];</code>也可以以这样的形式定义一个长度为5的数组并令其值均初始化为3。可以使用下标来访问数组元素，如<code>arr[0]</code>的值为1。</p>
+</li>
+<li>
+<p>元组，(type1, type2)</p>
+<p>例如<code>let tup: (i32, f32, u32) = (-2, 1.1, 3);</code>就定义了一个元组<code>tup</code>，可以以<code>tup.1</code>这样的形式访问第二个元素1.1。</p>
+<p>可以用模式匹配的方式取出这3个数：<code>let (x, y, z) = tup;</code>， x，y，z分别为-2,1.1,3。</p>
+</li>
+</ul>
+<h3 id="53">5.3 函数</h3>
+<blockquote>
+<p>参数传递等方面的问题涉及到所有权的概念，在这里不做细表</p>
+</blockquote>
+<p>使用<code>fn</code>关键字来定义函数，Rust中函数名一般采用<strong>snake_case</strong>。Rust并不关心函数定义在使用它的地方的前面还是后面，只要定义了即可。</p>
+<p>定义如下函数<code>other_func</code>：</p>
+<div class="highlight"><pre><span></span><code><span class="k">fn</span> <span class="nf">other_func</span><span class="p">(</span><span class="n">a</span>: <span class="kt">i32</span><span class="p">,</span><span class="w"> </span><span class="n">b</span>: <span class="kt">u32</span><span class="p">)</span><span class="w"> </span>-&gt; <span class="kt">i32</span> <span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="n">println</span><span class="o">!</span><span class="p">(</span><span class="s">"This is another function!"</span><span class="p">);</span><span class="w"></span>
+<span class="w">    </span><span class="n">println</span><span class="o">!</span><span class="p">(</span><span class="s">"a = {}, b = {}"</span><span class="p">,</span><span class="w"> </span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="n">b</span><span class="p">);</span><span class="w"></span>
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span><span class="w"></span>
+<span class="w">    </span><span class="n">result</span><span class="w">    </span><span class="c1">// 这是Rust推荐写法，较为简洁，也可以写成return result;</span>
+<span class="p">}</span><span class="w"></span>
+</code></pre></div>
+<p>上述函数需要i32类型的参数a和u32类型的参数b，并将a+1的值返回，返回值是i32类型的。使用 <code>return</code> 关键字和指定值，可从函数中提前返回；但大部分函数隐式的返回最后的表达式（最后无分号的<code>result</code>即是一个表达式）。</p>
+<p>可以在<code>main</code>函数中如此调用该函数：</p>
+<div class="highlight"><pre><span></span><code><span class="kd">let</span><span class="w"> </span><span class="n">a</span>: <span class="kt">i32</span> <span class="o">=</span><span class="w"> </span><span class="o">-</span><span class="mi">1</span><span class="p">;</span><span class="w"></span>
+<span class="kd">let</span><span class="w"> </span><span class="n">b</span>: <span class="kt">u32</span> <span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span><span class="w"></span>
+<span class="kd">let</span><span class="w"> </span><span class="n">result</span>: <span class="kt">i32</span> <span class="o">=</span><span class="w"> </span><span class="n">other_func</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="n">b</span><span class="p">);</span><span class="w"></span>
+<span class="n">println</span><span class="o">!</span><span class="p">(</span><span class="s">"result = {}"</span><span class="p">,</span><span class="w"> </span><span class="n">result</span><span class="p">);</span><span class="w"></span>
+</code></pre></div>
+<p>运行这些代码，我们可以看到其输出了<code>result = 0</code>在命令行中。</p>
+<h3 id="54">5.4 控制流</h3>
+<ul>
+<li>
+<p>if语句</p>
+<p><code>if &lt;condition&gt; {&lt;expression&gt;}</code>。具体例如运行下面这段代码，可以看到<code>Yes, x = 1!</code>被输出在终端上：</p>
+</li>
+</ul>
+<div class="highlight"><pre><span></span><code><span class="kd">let</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span><span class="w"></span>
+<span class="k">if</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="n">println</span><span class="o">!</span><span class="p">(</span><span class="s">"Yes, x = 1!"</span><span class="p">);</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
+</code></pre></div>
+<ul>
+<li>
+<p>if-else语句</p>
+<p><code>if &lt;condition&gt; {&lt;expression&gt;} else {&lt;expression&gt;}</code>。具体例如运行下面这段代码，可以看到<code>No, x != 2!</code>被输出在终端上：</p>
+</li>
+</ul>
+<div class="highlight"><pre><span></span><code><span class="kd">let</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span><span class="w"></span>
+<span class="k">if</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="n">println</span><span class="o">!</span><span class="p">(</span><span class="s">"Yes, x = 2!"</span><span class="p">);</span><span class="w"></span>
+<span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="n">println</span><span class="o">!</span><span class="p">(</span><span class="s">"No, x != 2!"</span><span class="p">);</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
+</code></pre></div>
+<ul>
+<li>
+<p>if-else if-else语句</p>
+<p>其实就是上面这样结构的嵌套，例如运行下面这段代码，可以看到<code>Yes, x = 3!</code>被输出在终端上：</p>
+</li>
+</ul>
+<div class="highlight"><pre><span></span><code><span class="kd">let</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">3</span><span class="p">;</span><span class="w"></span>
+<span class="k">if</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="n">println</span><span class="o">!</span><span class="p">(</span><span class="s">"Yes, x = 1!"</span><span class="p">)</span><span class="w"></span>
+<span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="n">println</span><span class="o">!</span><span class="p">(</span><span class="s">"Yes, x = 2!"</span><span class="p">)</span><span class="w"></span>
+<span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">3</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="n">println</span><span class="o">!</span><span class="p">(</span><span class="s">"Yes, x = 3!"</span><span class="p">)</span><span class="w"></span>
+<span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="n">println</span><span class="o">!</span><span class="p">(</span><span class="s">"No, this is Wrong"</span><span class="p">)</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
+</code></pre></div>
+<ul>
+<li>
+<p>在let定义中使用if语句</p>
+<p>如下这段代码所示，因为要返回值，所以<code>{}</code>内的表达式是无分号的（代码块的值是其最后一个表达式的值），但是外部定义的是一个完整的let表达式，所以最后是有分号的。运行这段代码，可以看到<code>x = 11</code>被输出在终端上：</p>
+</li>
+</ul>
+<div class="highlight"><pre><span></span><code><span class="kd">let</span><span class="w"> </span><span class="n">y</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">10</span><span class="p">;</span><span class="w"></span>
+<span class="kd">let</span><span class="w"> </span><span class="n">condition</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span><span class="p">;</span><span class="w"></span>
+<span class="kd">let</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">condition</span><span class="w"> </span><span class="p">{</span><span class="w"> </span>
+<span class="w">    </span><span class="n">y</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span>
+<span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span><span class="w"> </span>
+<span class="w">    </span><span class="mi">6</span><span class="w"> </span>
+<span class="p">};</span><span class="w"></span>
+<span class="n">println</span><span class="o">!</span><span class="p">(</span><span class="s">"x = {}"</span><span class="p">,</span><span class="w"> </span><span class="n">x</span><span class="p">);</span><span class="w"></span>
+</code></pre></div>
+<ul>
+<li>
+<p>loop循环</p>
+<p><code>loop {&lt;expression&gt;}</code>。具体例如如下代码。因为需要计数，所以这里定义了一个可变变量<code>counter</code>。在<code>loop</code>中，可以使用<code>break</code>语句退出循环。运行这段代码，会从<code>Count: 0</code>一直打印到<code>Count: 9</code>后打印<code>Exit Loop!</code>并退出：</p>
+</li>
+</ul>
+<div class="highlight"><pre><span></span><code><span class="kd">let</span><span class="w"> </span><span class="k">mut</span><span class="w"> </span><span class="n">counter</span>: <span class="kt">u32</span> <span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"></span>
+<span class="k">loop</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="n">println</span><span class="o">!</span><span class="p">(</span><span class="s">"Count: {}"</span><span class="p">,</span><span class="w"> </span><span class="n">counter</span><span class="p">);</span><span class="w"></span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="n">counter</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">9</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">        </span><span class="n">println</span><span class="o">!</span><span class="p">(</span><span class="s">"Exit Loop!"</span><span class="p">);</span><span class="w"></span>
+<span class="w">        </span><span class="k">break</span><span class="p">;</span><span class="w"></span>
+<span class="w">    </span><span class="p">}</span><span class="w"></span>
+<span class="w">    </span><span class="c1">//counter = counter + 1;</span>
+<span class="w">    </span><span class="n">counter</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
+</code></pre></div>
+<ul>
+<li>
+<p>在let定义中使用loop语句</p>
+<p>大致同上，只不过这里在break的同时返回了<code>counter</code>乘2的值，作为y的值。运行下面这段代码，可以看到打印出<code>y = 40</code>的结果：</p>
+</li>
+</ul>
+<div class="highlight"><pre><span></span><code><span class="kd">let</span><span class="w"> </span><span class="n">y</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">loop</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="n">counter</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span><span class="w"></span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="n">counter</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">20</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">        </span><span class="c1">// return value when break</span>
+<span class="w">        </span><span class="k">break</span><span class="w"> </span><span class="n">counter</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">2</span><span class="p">;</span><span class="w"></span>
+<span class="w">    </span><span class="p">}</span><span class="w"></span>
+<span class="p">};</span><span class="w"></span>
+<span class="n">println</span><span class="o">!</span><span class="p">(</span><span class="s">"y = {}"</span><span class="p">,</span><span class="w"> </span><span class="n">y</span><span class="p">);</span><span class="w"></span>
+</code></pre></div>
+<ul>
+<li>
+<p>while循环</p>
+<p><code>while &lt;condition&gt; {&lt;expression&gt;}</code>。例如如下代码，即在<code>i</code>不等于10的时候给<code>i</code>不断加1，直到<code>i</code>等于10的时候退出while循环。运行这段代码，可以看到打印出<code>i = 10</code>的结果：</p>
+</li>
+</ul>
+<div class="highlight"><pre><span></span><code><span class="kd">let</span><span class="w"> </span><span class="k">mut</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"></span>
+<span class="k">while</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">10</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="n">i</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
+<span class="n">println</span><span class="o">!</span><span class="p">(</span><span class="s">"i = {}"</span><span class="p">,</span><span class="w"> </span><span class="n">i</span><span class="p">);</span><span class="w"></span>
+</code></pre></div>
+<ul>
+<li>
+<p>for循环</p>
+<p>我们可以使用for循环来遍历数组中的元素，下面这段代码，定义了一个数组<code>arr</code>并初始化其内元素，主要可以采用两种方式顺序取出其内各元素。</p>
+</li>
+</ul>
+<div class="highlight"><pre><span></span><code><span class="kd">let</span><span class="w"> </span><span class="n">arr</span>: <span class="p">[</span><span class="kt">u32</span><span class="p">;</span><span class="w"> </span><span class="mi">5</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w"> </span><span class="mi">4</span><span class="p">,</span><span class="w"> </span><span class="mi">5</span><span class="p">];</span><span class="w"></span>
+<span class="k">for</span><span class="w"> </span><span class="n">element</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="n">arr</span><span class="p">.</span><span class="n">iter</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="n">println</span><span class="o">!</span><span class="p">(</span><span class="s">"element = {}"</span><span class="p">,</span><span class="w"> </span><span class="n">element</span><span class="p">);</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
+<span class="k">for</span><span class="w"> </span><span class="n">element</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="o">&amp;</span><span class="n">arr</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="n">println</span><span class="o">!</span><span class="p">(</span><span class="s">"element = {}"</span><span class="p">,</span><span class="w"> </span><span class="n">element</span><span class="p">);</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
+</code></pre></div>
+<h2 id="6">6 结语</h2>
+<p>事实上，Rust的编译器是相对较为严格的，而且提示和警告也比较清晰，不少时候出现编译问题直接按照编译器提示修改即可；而复杂程序过了编译器之后，出现运行时错误的概率也会大大降低~~虽然与编译器斗智斗勇也是一个必然过程~~</p>
+<p>以上就是对于Rust这门编程语言的基本介绍和简单语法入门，更多内容留待后续再言，或可直接阅读官方教程 <a href="https://doc.rust-lang.org/stable/book/">The Book</a> 来进行更加深入的学习（Rust的官方教程真的写的很好）。</p>
+        <h2>Other Articles</h2>
+            <h3>Previous Article: 
+                <a href="https://blog.bobankh.com/blog/mount_swap.html">
+                    在Ubuntu下挂载swap分区
+                </a>
+            </h3>
+
+
+    <div class="comments">
+        <div id="disqus_thread"></div>
+            <script type="text/javascript">
+                var disqus_shortname = 'blog-bobankh-com';
+                var disqus_identifier = 'blog/rust_intro.html';
+                var disqus_url = 'https://blog.bobankh.com/blog/rust_intro.html';
+                (function() {
+                    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+                    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+                })();
+            </script>
+        <noscript>Please enable JavaScript to view the comments.</noscript>
+    </div>
+        
+    </div>
+        <!-- /Content --> 
+
+        <!-- Footer -->
+        <div class="footer gradient-2">
+            <div class="container footer-container ">
+                <div class="row">
+                    <div class="col-xs-4 col-sm-3 col-md-3 col-lg-3">
+                        <div class="footer-title">Sitemap</div>
+                        <ul class="list-unstyled">
+                            <li><a href="https://blog.bobankh.com/archives.html">Archives</a></li>
+                            <li><a href="https://blog.bobankh.com/tags.html">Tags</a></li>
+                            <li><a href="https://blog.bobankh.com/authors.html">Authors</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-xs-4 col-sm-3 col-md-3 col-lg-3">
+                        <div class="footer-title">Social</div>
+                        <ul class="list-unstyled">
+                            <li><a href="https://bobankh.com" target="_blank">CV</a></li>
+                            <li><a href="https://github.com/BobAnkh" target="_blank">Github</a></li>
+                            <li><a href="bobankhshen@gmail.com" target="_blank">Email</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-xs-4 col-sm-3 col-md-3 col-lg-3">
+                        <div class="footer-title">Links</div>
+                        <ul class="list-unstyled">
+                            <li><a href="https://getpelican.com/" target="_blank">Pelican</a></li>
+                            <li><a href="https://python.org/" target="_blank">Python.org</a></li>
+                            <li><a href="https://jinja.pocoo.org/" target="_blank">Jinja2</a></li>
+                        </ul>
+                    </div> 
+                    <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3">
+                        <p class="pull-right text-right">
+                            <small><em>Proudly powered by <a href="https://docs.getpelican.com/" target="_blank">pelican</a></em></small><br/>
+                            <small><em>Theme powered by <a href="https://github.com/molivier" target="_blank">molivier</a></em></small><br/>
+                            <small>&copy; BobAnkh 2020</small>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /Footer -->
+    </body>
+</html>
